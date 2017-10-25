@@ -2,7 +2,7 @@
 % Please edit documentation in R/mr.wald.ratio.R
 \name{mr.wald.ratio}
 \alias{mr.wald.ratio}
-\title{Perform wald-ratio for causal estimation between exposure and outcome}
+\title{Perform wald-ratio}
 \usage{
 mr.wald.ratio(By, Bx, By.se, Bx.se)
 }
@@ -22,7 +22,7 @@ List with the following elements:
         iv.p: p-value
 }
 \description{
-Perform wald-ratio for causal estimation between exposure and outcome
+Perform wald-ratio
 }
 \examples{
 mr.wald.ratio()

@@ -14,21 +14,13 @@
 #   Test Package:              'Ctrl + Shift + T'
 
 
-data("BMI")
-data("alzheimer")
-data("cholesterol")
 
-int <- Reduce(intersect, list(BMI$SNP, cholesterol$SNP))
-
-outcome <- BMI[BMI$SNP %in% int, ]
-exposure <- cholesterol[cholesterol$SNP %in% int, ]
-
-outcome <- outcome[! duplicated(outcome$SNP), ]
-exposure <- exposure[! duplicated(exposure$SNP), ]
+data("celiac")
+data("hdl")
 
 
-iv <- mr.wald.ratio(By = outcome$beta, Bx = exposure$beta, By.se = outcome$se, Bx.se = exposure$se)
-ivw <- mr.inverse.variance.weighted.method(By = outcome$beta, Bx = exposure$beta, By.se = outcome$se, Bx.se = exposure$se)
-egger <- mr.egger.method(By = outcome$beta, Bx = exposure$beta, By.se = outcome$se, Bx.se = exposure$se)
+hdl <- mr.pre.process(B = hdl$Beta, B.se = hdl$SE, pval = hdl$P.value, effect_allele = hdl$A1, other_allele = hdl$A2, SNP = hdl$rsid)
 
+h <- mr.harmonize(By = celiac$Z_OR, Bx = hdl$beta, By.se = celiac$se, Bx.se = hdl$se, outcome.pval = celiac$P, exposure.pval = hdl$pval, outcome.effect_allele = celiac$GiantMinorAllele,
+                  exposure.effect_allele = hdl$effect_allele, exposure.other_allele = hdl$other_allele, outcome.SNP = celiac$rs, exposure.SNP = hdl$SNP)
 

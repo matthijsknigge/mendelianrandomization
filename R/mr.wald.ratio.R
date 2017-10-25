@@ -1,4 +1,4 @@
-#' Perform wald-ratio for causal estimation between exposure and outcome
+#' Perform wald-ratio
 #' @author Matthijs Knigge
 #'
 #'
