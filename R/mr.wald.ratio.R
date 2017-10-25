@@ -18,15 +18,15 @@
 #'         iv.se: standard error
 #'         iv.p: p-value
 mr.wald.ratio <- function(By, Bx, By.se, Bx.se){
-  # beta.iv
+  # iv
   iv <- By / Bx
   # z-scores
   By.z <- By / By.se
   Bx.z <- Bx / Bx.se
-  # beta.iv.se
+  # iv.se
   iv.se <-sqrt (beta.iv^2 / ((By.z^2 * Bx.z^2) /
                              (By.z^2 + Bx.z^2)))
-  # beta.iv.p
+  # iv.p
   iv.p <-  pnorm((iv / iv.se), lower.tail = FALSE)
 
   return(list(iv = iv, iv.se = iv.se, iv.p = iv.p))

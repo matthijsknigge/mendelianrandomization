@@ -16,11 +16,11 @@
 #'         ivw.se: standard error
 #'         ivw.p: p-value
 mr.inverse.variance.weighted.method <- function(By, Bx, By.se, Bx.se){
-  # beta.ivw
+  # ivw
   ivw     <- sum(By*Bx*By.se^-2)/sum(Bx^2*By.se^-2)
-  # beta.ivw.se
+  # ivw.se
   ivw.se  <- 1/sqrt(sum(Bx^2*By.se^-2))
-  # beta.ivw.p
+  # ivw.p
   ivw.p   <- pchisq((ivw / ivw.se)^2, 1, lower.tail = FALSE)
 
 
