@@ -13,7 +13,7 @@
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
-library("devtools")
-library(roxygen2)
+
+library(devtools); library(roxygen2)
 
 document()
