@@ -14,5 +14,3 @@
 #   Test Package:              'Ctrl + Shift + T'
 
 
-data("rheumatoid_arthritis")
-data("celiac_disease")
