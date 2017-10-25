@@ -24,8 +24,8 @@ mr.wald.ratio <- function(By, Bx, By.se, Bx.se){
   By.z <- By / By.se
   Bx.z <- Bx / Bx.se
   # iv.se
-  iv.se <-sqrt (beta.iv^2 / ((By.z^2 * Bx.z^2) /
-                             (By.z^2 + Bx.z^2)))
+  iv.se <-sqrt (iv^2 / ((By.z^2 * Bx.z^2) /
+                        (By.z^2 + Bx.z^2)))
   # iv.p
   iv.p <-  pnorm((iv / iv.se), lower.tail = FALSE)
 
