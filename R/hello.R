@@ -14,7 +14,3 @@
 #   Test Package:              'Ctrl + Shift + T'
 
 
-library(devtools); library(roxygen2)
-
-document()
-
