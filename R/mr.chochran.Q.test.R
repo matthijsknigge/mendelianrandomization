@@ -1,56 +1,51 @@
 #' Perform Chochran's Q test
 #' @author Matthijs Knigge
+#' @description Chochran's Q is a iterative method that tries to find pleiotropic SNPs, and filters those SNPs out.
 #'
-#'
-#' @return calculation phenotype, SNP, beta.exposure, se.exposure, beta.outcome, se.outcome, beta.iv, beta.iv.se, beta.iv.p
-#' @return method beta.ivw, beta.ivw.se, beta.ivw.p, beta.egger, beta.egger.se, beta.egger.p, beta.egger.i, beta.egger.i.se, beta.egger.i.p
-#' @param p.threshold p value threshold
+#' @param data data.frame containen SNP, By, Bx, By.se, Bx.se, iv, iv.se
+#' @param pval p value threshold
 #' @keywords chochrans Q
 #' @export
 #' @examples
 #' mr.chochran.Q.test()
 #'
-#' @return calculation with removed pleiotrpoic effect, and re-calculated egger, and ivw method
-mr.chochran.Q.test <- function(calculation, method, p.threshold){
-  # add data slots for chochran Q
-  method$beta.egger.Q <- 0; method$beta.egger.p.Q <- 0; method$beta.egger.i.Q <- 0; method$beta.ivw.Q <- 0; method$beta.ivw.p.Q <- 0; method$beta.ivw.se.Q <- 0; method$beta.egger.se.Q <- 0
+#' @return data with column chochran's Q column added which says if the SNPs is used or not in the method.
+mr.chochran.Q.test <- function(data, pval){
+  # add slot
+  data$chochrans.q <- 0
+  # deep copy of ivw
+  ivw <<- 0
   # save copy of data
-  calculation.copy <<- calculation
-  method.copy <<- method
+  data.copy <<- data
   # delete snp if beta.iv.se is not available
-  if(length(which(is.na(calculation.copy$beta.iv.se)) > 0)){
-    calculation.copy <<- calculation.copy[-which(is.na(calculation.copy$beta.iv.se)), ]
+  if(length(which(is.na(data.copy$iv.se)) > 0)){
+    data.copy <<- data.copy[-which(is.na(data.copy$iv.se)), ]
   }
   # store chochrans.q.p
   chochrans.q.p <<- 0.0
 
-  while(p.threshold > chochrans.q.p & length(calculation.copy$SNP) >= 3){
+  while(pval > chochrans.q.p & length(data.copy$SNP) >= 3){
     # perform chochrans.q
-    calculation.copy$chochrans.q <<- 1/calculation.copy$beta.iv.se * (calculation.copy$beta.iv - method.copy$beta.ivw)^2
+    data.copy$chochrans.q <<- 1/data.copy$iv.se * (data.copy$iv - ivw)^2
     # determine maximum term
-    chochrans.q.max <- calculation.copy[which.max(calculation.copy$chochrans.q), ]$SNP
+    chochrans.q.max <- data.copy[which.max(data.copy$chochrans.q), ]$SNP
     # calcule the p of the sum of chochrans.q terms
-    chochrans.q.p <<-  pchisq(sum(calculation.copy$chochrans.q), df = length(calculation.copy$chochrans.q-1), lower.tail = FALSE)
+    chochrans.q.p <<-  pchisq(sum(data.copy$chochrans.q), df = length(data.copy$chochrans.q-1), lower.tail = FALSE)
     # remove maximum term
-    calculation.copy <<- calculation.copy[-which(calculation.copy$SNP == chochrans.q.max), ]
+    data.copy <<- data.copy[-which(data.copy$SNP == chochrans.q.max), ]
     # re-calculate ivw
-    method.copy$beta.ivw <- mr.beta.ivw(By = calculation.copy$beta.outcome, Bx = calculation.copy$beta.exposure, By.se = calculation.copy$se.outcome, Bx.se = calculation.copy$se.exposure)$beta.ivw
+    ivw <<- mr.inverse.variance.weighted.method(By = data.copy$By, Bx = data.copy$Bx, By.se = data.copy$By.se, Bx.se = data.copy$Bx.se)$ivw
 
   }
   # if not able to perform chochrans.q
-  if(length(calculation.copy$SNP) < 3){
-    return(list(calculation = calculation, method = method))
+  if(length(data.copy$SNP) < 3){
+    return(data)
   }
-  # re-calculate ivw, and egger
-  ivw <- mr.beta.ivw(By = calculation.copy$beta.outcome, Bx = calculation.copy$beta.exposure, By.se = calculation.copy$se.outcome, Bx.se = calculation.copy$se.exposure)
-  egger <- mr.egger(By = calculation.copy$beta.outcome, Bx = calculation.copy$beta.exposure, By.se = calculation.copy$se.outcome, Bx.se = calculation.copy$se.exposure)
-  # re-assign ivw, and egger
-  method$beta.ivw.Q <- ivw$beta.ivw; method$beta.ivw.p.Q <- ivw$beta.ivw.p
-  method$beta.egger.Q <- egger$beta.egger; method$beta.egger.p.Q <- egger$beta.egger.p; method$beta.egger.i.Q <- egger$beta.egger.i
-  method$beta.egger.se.Q <- egger$beta.egger.se; method$beta.ivw.se.Q <- ivw$beta.ivw.se
   # intercept between and determine which snps did not participate in the calculation
-  int <- Reduce(intersect, list(calculation.copy$SNP, calculation$SNP))
-  calculation[calculation$SNP %in% int, ]$chochrans.q <- 1
-
-  return(list(calculation = calculation, method = method))
+  int <- Reduce(intersect, list(data.copy$SNP, data$SNP))
+  # 0 means not used in Chochrans Q test thus pleiotropic
+  data[data$SNP %in% int, ]$chochrans.q <- 1
+  # clear workspace
+  rm(data.copy, envir = .GlobalEnv); rm(ivw, envir = .GlobalEnv); rm(chochrans.q.p, envir = .GlobalEnv);
+  return(data)
 }

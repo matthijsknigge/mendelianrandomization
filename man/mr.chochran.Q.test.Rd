@@ -4,20 +4,18 @@
 \alias{mr.chochran.Q.test}
 \title{Perform Chochran's Q test}
 \usage{
-mr.chochran.Q.test(calculation, method, p.threshold)
+mr.chochran.Q.test(data, pval)
 }
 \arguments{
-\item{p.threshold}{p value threshold}
+\item{data}{data.frame containen SNP, B, B.se}
+
+\item{pval}{p value threshold}
 }
 \value{
-calculation phenotype, SNP, beta.exposure, se.exposure, beta.outcome, se.outcome, beta.iv, beta.iv.se, beta.iv.p
-
-method beta.ivw, beta.ivw.se, beta.ivw.p, beta.egger, beta.egger.se, beta.egger.p, beta.egger.i, beta.egger.i.se, beta.egger.i.p
-
-calculation with removed pleiotrpoic effect, and re-calculated egger, and ivw method
+data with column chochran's Q column added which says if the SNPs is used or not in the method.
 }
 \description{
-Perform Chochran's Q test
+Chochran's Q is a iterative method that tries to find pleiotropic SNPs, and filters those SNPs out.
 }
 \examples{
 mr.chochran.Q.test()
