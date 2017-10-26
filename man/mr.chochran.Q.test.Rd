@@ -7,7 +7,7 @@
 mr.chochran.Q.test(data, pval)
 }
 \arguments{
-\item{data}{data.frame containen SNP, B, B.se}
+\item{data}{data.frame containen SNP, By, Bx, By.se, Bx.se, iv, iv.se}
 
 \item{pval}{p value threshold}
 }
