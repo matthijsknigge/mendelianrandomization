@@ -2,6 +2,7 @@
 
 export(mr.chochran.Q.test)
 export(mr.egger.method)
+export(mr.find.missing.allelic.information)
 export(mr.harmonize)
 export(mr.inverse.variance.weighted.method)
 export(mr.pre.process)

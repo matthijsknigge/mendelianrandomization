@@ -5,8 +5,8 @@
 \title{Perform mr harmonization}
 \usage{
 mr.harmonize(By, Bx, By.se, Bx.se, outcome.pval, exposure.pval,
-  outcome.effect_allele, exposure.effect_allele, outcome.other_allele,
-  exposure.other_allele, outcome.SNP, exposure.SNP)
+  outcome.effect_allele, exposure.effect_allele, exposure.other_allele,
+  outcome.SNP, exposure.SNP)
 }
 \arguments{
 \item{By}{Vector of genetic effects  from outcome}
@@ -25,13 +25,13 @@ mr.harmonize(By, Bx, By.se, Bx.se, outcome.pval, exposure.pval,
 
 \item{exposure.effect_allele}{vector containing the effect_alleles from exposure}
 
-\item{outcome.other_allele}{vector containing the effect_alleles from outcome}
-
 \item{exposure.other_allele}{vector containing the effect_alleles from exposure}
 
 \item{outcome.SNP}{vector containing rs_ids from outcome}
 
 \item{exposure.SNP}{vector containing rs_ids from exposure}
+
+\item{outcome.other_allele}{vector containing the effect_alleles from outcome}
 }
 \value{
 harmonized data
