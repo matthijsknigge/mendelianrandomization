@@ -1,6 +1,6 @@
 #' Find missing allele
 #' @author Matthijs Knigge
-#' @description If the outcome or exposure is missing allelic information, it will sort out what is the missing allele, and what is the effect and other allele.
+#' @description If the outcome or exposure is missing allelic information, this function will sort out what is the missing allele, and what is the effect and other allele.
 #'
 #' @param thousand.G absolute location to 1000Genomes file
 #' @param data data.frame that must contain effect_allele, and SNP columns

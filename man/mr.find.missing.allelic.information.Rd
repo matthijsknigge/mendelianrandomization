@@ -15,7 +15,7 @@ mr.find.missing.allelic.information(data, thousand.G)
 data with both alleles effect_allele and other_allele
 }
 \description{
-If the outcome or exposure is missing allelic information, it will sort out what is the missing allele, and what is the effect and other allele.
+If the outcome or exposure is missing allelic information, this function will sort out what is the missing allele, and what is the effect and other allele.
 }
 \examples{
 mr.find.missing.allelic.information(data = outcome, thousand.G = '/path/to/thousand/genomes/file.bim')
