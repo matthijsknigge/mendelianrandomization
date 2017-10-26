@@ -42,8 +42,8 @@ mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*
     if(verbose == FALSE){
       SNP <- read.table(paste(fn, ".clumped", sep=""), header=T)$SNP
     }
-    unlink(paste0(tempdir, fn, ".*"))
-
+    # remove temp clump files
+    unlink(paste0(fn, "*"))
     # intersect between data sets
     int <- Reduce(intersect, list(data$SNP, SNP))
     # remove SNPs in LD
