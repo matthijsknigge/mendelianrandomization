@@ -48,6 +48,9 @@ mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*
     int <- Reduce(intersect, list(data$SNP, SNP))
     # remove SNPs in LD
     data <- data[data$SNP %in% int, ]
+    # clear work space
+    rm(count, envir = .GlobalEnv); rm(track.snp, envir = .GlobalEnv); rm(current.line, envir = .GlobalEnv); rm(previous.line, envir = .GlobalEnv); rm(previous.RSQ, envir = .GlobalEnv); rm(proxy.added, envir = .GlobalEnv); rm(RSQ, envir = .GlobalEnv); rm(snp, envir = .GlobalEnv); rm(snp.proxy.added, envir = .GlobalEnv)
+    # return result
     return(data)
   } else {
     message("Nothing within Linkage Disequilibrium")
