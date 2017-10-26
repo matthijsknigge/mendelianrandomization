@@ -1,0 +1,31 @@
+PLINK v1.90b4.6 64-bit (15 Aug 2017)
+Options in effect:
+  --bfile /home/matthijsknigge/Bioinformatics/1000G/EUR_1000G_phase3_vcf
+  --clump exe/temp_clump/file3a12594eed49
+  --clump-kb 1000
+  --clump-p1 5e-08
+  --clump-p2 5e-08
+  --clump-r2 0.1
+  --clump-verbose
+  --out exe/temp_clump/file3a12594eed49
+
+Hostname: knigge
+Working directory: /home/matthijsknigge/mendelianRandomization
+Start time: Thu Oct 26 10:43:27 2017
+
+Random number seed: 1509007407
+15901 MB RAM detected; reserving 7950 MB for main workspace.
+11050222 variants loaded from .bim file.
+503 people (0 males, 0 females, 503 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to exe/temp_clump/file3a12594eed49.nosex .
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 503 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999071.
+11050222 variants and 503 people pass filters and QC.
+Note: No phenotypes present.
+1 top variant ID missing; see the end of the .clumped file.
+--clump: 56 clumps formed from 115 top variants.
+Results written to exe/temp_clump/file3a12594eed49.clumped .
+
+End time: Thu Oct 26 10:43:32 2017
