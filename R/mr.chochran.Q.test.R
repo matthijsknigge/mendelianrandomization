@@ -14,7 +14,7 @@ mr.chochran.Q.test <- function(data, pval){
   # add slot
   data$chochrans.q <- 0
   # deep copy of ivw
-  ivw <<- 0
+  ivw <<- mr.inverse.variance.weighted.method(By = data$By, Bx = data$Bx, By.se = data$By.se, Bx.se = data$Bx.se)$ivw
   # save copy of data
   data.copy <<- data
   # delete snp if beta.iv.se is not available

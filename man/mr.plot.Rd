@@ -4,20 +4,40 @@
 \alias{mr.plot}
 \title{Plot MR results}
 \usage{
-mr.plot(By, Bx, By.se, Bx.se, iv, iv.se)
+mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
+  egger.i = NULL, chochran.Q = NULL, ivw.Q = NULL, egger.Q = NULL,
+  egger.i.Q = NULL, outcome.name, exposure.name)
 }
 \arguments{
-\item{By}{Vector of genetic effects on exposure}
+\item{By}{vector of genetic effects on exposure}
 
-\item{Bx}{Vector of genetic effects on outcome}
+\item{Bx}{vector of genetic effects on outcome}
 
-\item{By.se}{Standard errors of genetic effects on exposure}
+\item{By.se}{vector of standard errors of genetic effects on exposure}
 
-\item{Bx.se}{Standard errors of genetic effects on outcome}
+\item{Bx.se}{vector of standard errors of genetic effects on outcome}
 
-\item{iv}{causal effect estimate}
+\item{iv}{vector of causal effect estimate}
 
-\item{iv.se}{standard error of causal effect estimate}
+\item{iv.se}{vector of standard error of causal effect estimate}
+
+\item{ivw}{numeric causal estimate inverse variance weighted method. Default is NULL.}
+
+\item{egger}{numeric causal estimate of egger method, this is the slope. Default is NULL.}
+
+\item{egger.i}{numeric pleiotropic estimate of egger, this is the intersept. Default is NULL.}
+
+\item{chochran.Q}{vector indicating if the SNPs is removed by Chochran's Q test due to pleiotropic effects. Default is NULL.}
+
+\item{ivw.Q}{numeric after correcting for pleotropic effect this is the re-calculated inverse variance weighted estimate. Default is NULL.}
+
+\item{egger.Q}{numeric after correcting for pleotropic effect this is the re-calculated egger estimate. Default is NULL.}
+
+\item{egger.i.Q}{numeric after correcting for pleotropic effect this is the re-calculated egger pleiotropic estimate. Default is NULL.}
+
+\item{outcome.name}{string of the outcome name. Default is NULL.}
+
+\item{exposure.name}{string of the exposure name. Default is NULL.}
 }
 \value{
 plot object
@@ -25,6 +45,10 @@ plot object
 \description{
 Plot MR results
 }
+\examples{
+
+}
 \author{
 Matthijs Knigge
 }
+\keyword{mr.plot}

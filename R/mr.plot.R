@@ -2,16 +2,30 @@
 #' @author Matthijs Knigge
 #'
 #'
-#' @param By Vector of genetic effects on exposure
-#' @param Bx Vector of genetic effects on outcome
-#' @param By.se Standard errors of genetic effects on exposure
-#' @param Bx.se Standard errors of genetic effects on outcome
-#' @param iv causal effect estimate
-#' @param iv.se standard error of causal effect estimate
+#' @param By vector of genetic effects of outcome
+#' @param Bx vector of genetic effects of exposure
+#' @param By.se vector of standard errors of genetic effects on exposure
+#' @param Bx.se vector of standard errors of genetic effects on outcome
+#' @param iv vector of causal effect estimate
+#' @param iv.se vector of standard error of causal effect estimate
+#' @param ivw numeric causal estimate inverse variance weighted method. Default is NULL.
+#' @param egger numeric causal estimate of egger method, this is the slope. Default is NULL.
+#' @param egger.i numeric pleiotropic estimate of egger, this is the intersept. Default is NULL.
+#' @param chochran.Q vector indicating if the SNPs is removed by Chochran's Q test due to pleiotropic effects. Default is NULL.
+#' @param outcome.name string of the outcome name. Default is NULL.
+#' @param exposure.name string of the exposure name. Default is NULL.
+#' @param ivw.Q numeric after correcting for pleotropic effect this is the re-calculated inverse variance weighted estimate. Default is NULL.
+#' @param egger.Q numeric after correcting for pleotropic effect this is the re-calculated egger estimate. Default is NULL.
+#' @param egger.i.Q numeric after correcting for pleotropic effect this is the re-calculated egger pleiotropic estimate. Default is NULL.
 #'
+#' @keywords mr.plot
 #' @export
+#' @examples
+#'
 #' @return plot object
-mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, egger.i = NULL){
+mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, egger.i = NULL, chochran.Q = NULL,
+                    ivw.Q = NULL, egger.Q = NULL, egger.i.Q = NULL,
+                    outcome.name, exposure.name){
   require(ggplot2); require("RColorBrewer"); require(latex2exp)
   # calculate z-score of Instrumental Variable
   iv.z <- iv / iv.se
@@ -33,20 +47,46 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
   if(!is.null(egger) & !is.null(egger.i)){
   p <- p + geom_abline(aes(intercept = egger.i, slope = egger, linetype = "MRegger"), color = "darkblue", alpha = .2)
   }
-  # manually change legend for lines
+  # apply Chochran's Q test
+  if(!is.null(chochran.Q)){
+  p <- p + geom_point(aes(colour = iv.z, shape = factor(chochran.Q)), alpha = 0.8, size=4)
+  p <- p + geom_point(data=NULL, aes(x=Bx[which(chochran.Q == 0)], y=By[which(chochran.Q == 0)]), colour="red", size=4.1)
+  p <- p + guides(shape = guide_legend(override.aes = list(size = 5, shape=c(21,21), colour="white", fill=c("red", brewer.pal(9, "Blues")[7]))))
+  p <- p + scale_shape_manual(values=c(19, 19), name = TeX("$\\chi^2_{homogeneity}$"), labels = c("p > 0.05", "p < 0.05"))
+  }
+
+  # draw inverse variance weighted effect after Chochran's Q test
+  if(!is.null(ivw.Q)){
+    p <- p + geom_abline(aes(intercept = 0, slope = ivw.Q, linetype = "IVW.Q"), color = "darkblue")
+  }
+  # draw egger method effect after Chochran's Q test
+  if(!is.null(egger.Q) & !is.null(egger.i.Q)){
+    p <- p + geom_abline(aes(intercept = egger.i.Q, slope = egger.Q, linetype = "MRegger.Q"), color = "darkblue")
+  }
+
+
+
+  # manually change legend or override the existing one
   p <- p + scale_linetype_manual(name = "Method", values = c(IVW = "dashed", MRegger = "solid", IVW.Q = "dashed", MRegger.Q = "solid"))
 
+  # waring! extremely ugly code. Override legends is not flexible, this is a dirty workaround.
+  if(!is.null(ivw.Q)){lty <- c(IVW = "dashed", IVW.Q = "dashed", MRegger = "solid"); alp <- c(0.1,1,0.1); co  <- c("darkblue", "darkblue", "darkblue")}
+  if(!is.null(egger.Q) & !is.null(egger.i.Q)){lty <- c(IVW = "dashed", MRegger.Q = "solid", MRegger = "solid"); alp <- c(0.1,1,0.1); co  <- c("darkblue", "darkblue", "darkblue")}
+  if(!is.null(ivw.Q) & !is.null(egger.Q) & !is.null(egger.i.Q)){lty <- c(IVW = "dashed", IVW.Q = "dashed", MRegger = "solid", MRegger.Q = "solid"); alp <- c(0.1,1,0.1, 1); co  <- c("darkblue", "darkblue", "darkblue", "darkblue")}
+  if(!is.null(ivw.Q) | !is.null(egger.Q) & !is.null(egger.i.Q)){p <- p + guides( linetype = guide_legend(override.aes = list(linetype=lty, color=co, alpha=alp)))}
+
+
+  p <- p + scale_colour_gradientn(colours = brewer.pal(9, "Blues")[2:9], name = TeX('$\\frac{\\hat{\\beta}_{IV}}{\\sigma_{\\hat{\\beta}_{IV}}}$'))
 
   # stolen theme for plot
   p <- p + theme_minimal()
   # labs and titles
   p <- p + labs(y= TeX('$\\hat{\\beta}_{outcome}$'),
                 x= TeX('$\\hat{\\beta}_{exposure}$'),
-                title = "Something ~ something")
-  p <- p + theme(axis.text=element_text(size=14),
+                title = paste0(outcome.name, " ~ ", exposure.name))
+  # font size and type
+  p <- p + theme(axis.text=element_text(size=14, face="bold"),
                  axis.title=element_text(size=14,face="bold"))
-
-
 
 
   return(p)
