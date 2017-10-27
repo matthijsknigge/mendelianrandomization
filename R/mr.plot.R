@@ -17,15 +17,17 @@
 #' @param ivw.Q numeric after correcting for pleotropic effect this is the re-calculated inverse variance weighted estimate. Default is NULL.
 #' @param egger.Q numeric after correcting for pleotropic effect this is the re-calculated egger estimate. Default is NULL.
 #' @param egger.i.Q numeric after correcting for pleotropic effect this is the re-calculated egger pleiotropic estimate. Default is NULL.
+#' @param legend boolean use show legend, or do not. Default is TRUE
 #'
 #' @keywords mr.plot
 #' @export
 #' @examples
-#'
+#' mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, egger.i = NULL, chochran.Q = NULL,
+#'                     ivw.Q = NULL, egger.Q = NULL, egger.i.Q = NULL, outcome.name, exposure.name, legend = TRUE)
 #' @return plot object
 mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, egger.i = NULL, chochran.Q = NULL,
                     ivw.Q = NULL, egger.Q = NULL, egger.i.Q = NULL,
-                    outcome.name, exposure.name){
+                    outcome.name, exposure.name, legend = TRUE){
   require(ggplot2); require("RColorBrewer"); require(latex2exp)
   # calculate z-score of Instrumental Variable
   iv.z <- iv / iv.se
@@ -63,9 +65,6 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
   if(!is.null(egger.Q) & !is.null(egger.i.Q)){
     p <- p + geom_abline(aes(intercept = egger.i.Q, slope = egger.Q, linetype = "MRegger.Q"), color = "darkblue")
   }
-
-
-
   # manually change legend or override the existing one
   p <- p + scale_linetype_manual(name = "Method", values = c(IVW = "dashed", MRegger = "solid", IVW.Q = "dashed", MRegger.Q = "solid"))
 
@@ -74,8 +73,7 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
   if(!is.null(egger.Q) & !is.null(egger.i.Q)){lty <- c(IVW = "dashed", MRegger.Q = "solid", MRegger = "solid"); alp <- c(0.1,1,0.1); co  <- c("darkblue", "darkblue", "darkblue")}
   if(!is.null(ivw.Q) & !is.null(egger.Q) & !is.null(egger.i.Q)){lty <- c(IVW = "dashed", IVW.Q = "dashed", MRegger = "solid", MRegger.Q = "solid"); alp <- c(0.1,1,0.1, 1); co  <- c("darkblue", "darkblue", "darkblue", "darkblue")}
   if(!is.null(ivw.Q) | !is.null(egger.Q) & !is.null(egger.i.Q)){p <- p + guides( linetype = guide_legend(override.aes = list(linetype=lty, color=co, alpha=alp)))}
-
-
+  # legend for z-score
   p <- p + scale_colour_gradientn(colours = brewer.pal(9, "Blues")[2:9], name = TeX('$\\frac{\\hat{\\beta}_{IV}}{\\sigma_{\\hat{\\beta}_{IV}}}$'))
 
   # stolen theme for plot
@@ -88,6 +86,10 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
   p <- p + theme(axis.text=element_text(size=14, face="bold"),
                  axis.title=element_text(size=14,face="bold"))
 
+  # remove legends
+  if(legend == FALSE){
+    p <- p + theme(legend.position="none")
+  }
 
   return(p)
 }

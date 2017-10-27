@@ -6,12 +6,12 @@
 \usage{
 mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
   egger.i = NULL, chochran.Q = NULL, ivw.Q = NULL, egger.Q = NULL,
-  egger.i.Q = NULL, outcome.name, exposure.name)
+  egger.i.Q = NULL, outcome.name, exposure.name, legend = TRUE)
 }
 \arguments{
-\item{By}{vector of genetic effects on exposure}
+\item{By}{vector of genetic effects of outcome}
 
-\item{Bx}{vector of genetic effects on outcome}
+\item{Bx}{vector of genetic effects of exposure}
 
 \item{By.se}{vector of standard errors of genetic effects on exposure}
 
@@ -38,6 +38,8 @@ mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
 \item{outcome.name}{string of the outcome name. Default is NULL.}
 
 \item{exposure.name}{string of the exposure name. Default is NULL.}
+
+\item{legend}{boolean use show legend, or do not. Default is TRUE}
 }
 \value{
 plot object
@@ -46,7 +48,8 @@ plot object
 Plot MR results
 }
 \examples{
-
+mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, egger.i = NULL, chochran.Q = NULL,
+                    ivw.Q = NULL, egger.Q = NULL, egger.i.Q = NULL, outcome.name, exposure.name, legend = TRUE)
 }
 \author{
 Matthijs Knigge

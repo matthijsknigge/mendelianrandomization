@@ -17,7 +17,7 @@ mr.egger.method(By, Bx, By.se, Bx.se)
 }
 \value{
 List of with the following elements:
-        egger.beta: MR estimate slope
+        egger: MR estimate slope
         egger.se: Standard error of MR estimate
         egger.p: p-value of MR estimate
         egger.i: Estimate of horizontal pleiotropy (intercept)
