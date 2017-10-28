@@ -13,7 +13,7 @@
 #' @param exposure.pval p-value from exposure
 #' @param exposure.effect_allele vector containing the effect_alleles from exposure
 #' @param exposure.other_allele vector containing the effect_alleles from exposure
-#' @param exposure.SNP vector containing rs_ids from exposure
+#' @param exposure.SNP vector containing SNPs from exposure
 #' @keywords harmonize
 #' @export
 #' @examples

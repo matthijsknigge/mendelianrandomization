@@ -29,7 +29,7 @@ mr.harmonize(By, Bx, By.se, Bx.se, outcome.pval, exposure.pval,
 
 \item{outcome.SNP}{vector containing rs_ids from outcome}
 
-\item{exposure.SNP}{vector containing rs_ids from exposure}
+\item{exposure.SNP}{vector containing SNPs from exposure}
 
 \item{outcome.other_allele}{vector containing the effect_alleles from outcome}
 }

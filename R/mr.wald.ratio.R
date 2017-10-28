@@ -2,10 +2,10 @@
 #' @author Matthijs Knigge
 #'
 #'
-#' @param By Vector of genetic effects on exposure
-#' @param Bx Vector of genetic effects on outcome
-#' @param By.se Standard errors of genetic effects on exposure
-#' @param Bx.se Standard errors of genetic effects on outcome
+#' @param By Vector of genetic effects of outcome
+#' @param Bx Vector of genetic effects of exposure
+#' @param By.se Standard errors of genetic effects on outcome
+#' @param Bx.se Standard errors of genetic effects on exposure
 #'
 #' @keywords wald-ratio
 #' @export

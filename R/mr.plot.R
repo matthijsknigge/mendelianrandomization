@@ -2,10 +2,10 @@
 #' @author Matthijs Knigge
 #'
 #'
-#' @param By vector of genetic effects of outcome
-#' @param Bx vector of genetic effects of exposure
-#' @param By.se vector of standard errors of genetic effects on exposure
-#' @param Bx.se vector of standard errors of genetic effects on outcome
+#' @param By Vector of genetic effects of outcome
+#' @param Bx Vector of genetic effects of exposure
+#' @param By.se Standard errors of genetic effects on outcome
+#' @param Bx.se Standard errors of genetic effects on exposure
 #' @param iv vector of causal effect estimate
 #' @param iv.se vector of standard error of causal effect estimate
 #' @param ivw numeric causal estimate inverse variance weighted method. Default is NULL.
@@ -18,6 +18,7 @@
 #' @param egger.Q numeric after correcting for pleotropic effect this is the re-calculated egger estimate. Default is NULL.
 #' @param egger.i.Q numeric after correcting for pleotropic effect this is the re-calculated egger pleiotropic estimate. Default is NULL.
 #' @param legend boolean use show legend, or do not. Default is TRUE
+#' @param position position of legend. Default bottom.
 #'
 #' @keywords mr.plot
 #' @export
@@ -27,8 +28,12 @@
 #' @return plot object
 mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, egger.i = NULL, chochran.Q = NULL,
                     ivw.Q = NULL, egger.Q = NULL, egger.i.Q = NULL,
-                    outcome.name, exposure.name, legend = TRUE){
-  require(ggplot2); require("RColorBrewer"); require(latex2exp)
+                    outcome.name, exposure.name, legend = TRUE, position = "bottom"){
+  require(ggplot2); require("RColorBrewer"); require(latex2exp); require(cowplot)
+  # check if Chochran's Q is used on data set
+  if(sum(chochran.Q) == length(By)){
+    chochran.Q <- NULL
+  }
   # calculate z-score of Instrumental Variable
   iv.z <- iv / iv.se
   # plot exposure effectsize against outcome effectsize
@@ -86,10 +91,42 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
   p <- p + theme(axis.text=element_text(size=14, face="bold"),
                  axis.title=element_text(size=14,face="bold"))
 
+  # add rug
+  p <- p + geom_rug(aes(color = iv.z))
+  p <- p + geom_rug(data=NULL, aes(x=Bx[which(chochran.Q == 0)], y=By[which(chochran.Q == 0)]), colour="red")
+
+  # position
+  p <- p + theme(legend.position = position)
   # remove legends
   if(legend == FALSE){
     p <- p + theme(legend.position="none")
   }
+  # for some #*$%! reason the variable must be in the global scope of R to be inserted into a grid??????????
+  Bx <<- Bx; By <<- By; chochran.Q <<- chochran.Q
+  # x-axis
+  xdens <- axis_canvas(p, axis = "x")
+  if(is.null(chochran.Q)){
+   xdens <- xdens + geom_density(data = NULL, aes(x = Bx), fill = "steelblue", alpha = 1, size = 0.2)
+  }
+  if(!is.null(chochran.Q)){
+    xdens <- xdens + geom_density(data = NULL, aes(x = Bx[which(chochran.Q == 1)]), fill = "steelblue", alpha = 1, size = 0.2)
+    xdens <- xdens + geom_density(data = NULL, aes(x = Bx[which(chochran.Q == 0)]), fill = "red", alpha = .3, size = 0.2)
+  }
+  # y-axis
+  ydens <- axis_canvas(p, axis = "y", coord_flip = T)
+  if(is.null(chochran.Q)){
+   ydens <- ydens + geom_density(data = NULL, aes(x = By), fill = "steelblue",  alpha = 1, size = 0.2)
+  }
+   if(!is.null(chochran.Q)){
+   ydens <- ydens + geom_density(data = NULL, aes(x = By[which(chochran.Q == 1)]), fill = "steelblue",  alpha = 1, size = 0.2)
+   ydens <- ydens + geom_density(data = NULL, aes(x = By[which(chochran.Q == 0)]), fill = "red",  alpha = .3, size = 0.2)
+  }
+  ydens <- ydens + coord_flip()
+  # insert into grid
+  p <- insert_xaxis_grob(p, xdens, grid::unit(.2, "null"), position = "top")
+  p <- insert_yaxis_grob(p, ydens, grid::unit(.2, "null"), position = "right")
 
+  # remove from global environment
+  rm(Bx, envir = .GlobalEnv); rm(By, envir = .GlobalEnv); rm(chochran.Q, envir = .GlobalEnv)
   return(p)
 }

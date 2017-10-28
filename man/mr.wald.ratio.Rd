@@ -7,13 +7,13 @@
 mr.wald.ratio(By, Bx, By.se, Bx.se)
 }
 \arguments{
-\item{By}{Vector of genetic effects on exposure}
+\item{By}{Vector of genetic effects of outcome}
 
-\item{Bx}{Vector of genetic effects on outcome}
+\item{Bx}{Vector of genetic effects of exposure}
 
-\item{By.se}{Standard errors of genetic effects on exposure}
+\item{By.se}{Standard errors of genetic effects on outcome}
 
-\item{Bx.se}{Standard errors of genetic effects on outcome}
+\item{Bx.se}{Standard errors of genetic effects on exposure}
 }
 \value{
 List with the following elements:

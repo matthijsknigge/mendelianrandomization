@@ -9,13 +9,13 @@ mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
   egger.i.Q = NULL, outcome.name, exposure.name, legend = TRUE)
 }
 \arguments{
-\item{By}{vector of genetic effects of outcome}
+\item{By}{Vector of genetic effects of outcome}
 
-\item{Bx}{vector of genetic effects of exposure}
+\item{Bx}{Vector of genetic effects of exposure}
 
-\item{By.se}{vector of standard errors of genetic effects on exposure}
+\item{By.se}{Standard errors of genetic effects on outcome}
 
-\item{Bx.se}{vector of standard errors of genetic effects on outcome}
+\item{Bx.se}{Standard errors of genetic effects on exposure}
 
 \item{iv}{vector of causal effect estimate}
 
