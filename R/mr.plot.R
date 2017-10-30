@@ -33,7 +33,7 @@
 mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, egger.i = NULL, chochran.Q = NULL,
                     ivw.Q = NULL, egger.Q = NULL, egger.i.Q = NULL, egger.p.fdr = NULL, ivw.p.fdr = NULL, egger.i.p = NULL,
                     outcome.name, exposure.name, legend = TRUE, position = "bottom", show.stats = TRUE){
-  require(ggplot2); require("RColorBrewer"); require(latex2exp); require(cowplot)
+  require(ggplot2); require("RColorBrewer"); require(latex2exp); require(cowplot); require(gridExtra)
   # check if Chochran's Q is used on data set
   if(sum(chochran.Q) == length(By)){
     chochran.Q <- NULL

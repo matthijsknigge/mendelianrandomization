@@ -6,7 +6,9 @@
 \usage{
 mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
   egger.i = NULL, chochran.Q = NULL, ivw.Q = NULL, egger.Q = NULL,
-  egger.i.Q = NULL, outcome.name, exposure.name, legend = TRUE)
+  egger.i.Q = NULL, egger.p.fdr = NULL, ivw.p.fdr = NULL,
+  egger.i.p = NULL, outcome.name, exposure.name, legend = TRUE,
+  position = "bottom", show.stats = TRUE)
 }
 \arguments{
 \item{By}{Vector of genetic effects of outcome}
@@ -35,11 +37,21 @@ mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
 
 \item{egger.i.Q}{numeric after correcting for pleotropic effect this is the re-calculated egger pleiotropic estimate. Default is NULL.}
 
+\item{egger.p.fdr}{value indicating slope significant different from zero after FDR correction.}
+
+\item{ivw.p.fdr}{value indicating slope significant different from zero after FDR correction.}
+
+\item{egger.i.p}{value indicating intercept significant different from zero after FDR correction.}
+
 \item{outcome.name}{string of the outcome name. Default is NULL.}
 
 \item{exposure.name}{string of the exposure name. Default is NULL.}
 
 \item{legend}{boolean use show legend, or do not. Default is TRUE}
+
+\item{position}{position of legend. Default bottom.}
+
+\item{show.stats}{boolean show statistics summary. Default is TRUE.}
 }
 \value{
 plot object

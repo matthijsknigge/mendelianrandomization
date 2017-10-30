@@ -4,12 +4,33 @@
 \alias{mr.funnel.plot}
 \title{MR funnel plot}
 \usage{
-mr.funnel.plot(iv, iv.se)
+mr.funnel.plot(iv, iv.se, method.estimate.before.Q,
+  method.estimate.after.Q = NULL, method.name, linetype = "dashed",
+  legend = TRUE, position = "bottom", chochran.Q = NULL, outcome.name,
+  exposure.name)
 }
 \arguments{
 \item{iv}{vector of causal effect estimate}
 
 \item{iv.se}{vector of standard error of causal effect estimate}
+
+\item{method.estimate.before.Q}{the beta estimate of the chosen method to plot before Chochren's Q test}
+
+\item{method.name}{name of the method, used for legend.}
+
+\item{linetype}{what linetype. Default dashed.}
+
+\item{legend}{boolean. Use legend, or remove. Default is TRUE}
+
+\item{position}{position of the legend. Default bottom}
+
+\item{chochran.Q}{vector indicating if the SNPs is removed by Chochran's Q test due to pleiotropic effects. Default is NULL.}
+
+\item{outcome.name}{string of outcome name}
+
+\item{exposure.name}{string of exposure name}
+
+\item{method.estimate.before.Q}{the beta estimate of the chosen method to plot after Chochren's Q test. Default NULL.}
 }
 \value{
 funnel plot
