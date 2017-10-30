@@ -7,6 +7,11 @@
 #' @param method.estimate.before.Q the beta estimate of the chosen method to plot after Chochren's Q test. Default NULL.
 #' @param method.name name of the method, used for legend.
 #' @param linetype what linetype. Default dashed.
+#' @param legend boolean. Use legend, or remove. Default is TRUE
+#' @param position position of the legend. Default bottom
+#' @param chochran.Q vector indicating if the SNPs is removed by Chochran's Q test due to pleiotropic effects. Default is NULL.
+#' @param outcome.name string of outcome name
+#' @param exposure.name string of exposure name
 #'
 #' @keywords funnel
 #' @export
@@ -14,7 +19,8 @@
 #' mr.funnel.plot()
 #'
 #' @return funnel plot
-mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.after.Q = NULL, method.name, linetype = "dashed"){
+mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.after.Q = NULL, method.name, linetype = "dashed", legend = TRUE, position = "bottom", chochran.Q = NULL,
+                           outcome.name, exposure.name){
   require(ggplot2); require(latex2exp); require("RColorBrewer"); require(ggExtra)
   # calculate z-score for coloring points
   iv.z <- iv / iv.se
@@ -40,22 +46,49 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
   # points
   p <- p + geom_point(aes(colour = iv.z), alpha = 0.8, size=4)
 
-  # method estimate before Chochran's Q test
-  p <- p +  geom_vline(aes(xintercept=method.estimate.before.Q, linetype = method.name), color = "darkblue")
-  # method estimate after Chochran's Q test
-  if(!is.null(method.estimate.after.Q)){
-    p <- p +  geom_vline(aes(xintercept=method.estimate.after.Q, linetype = paste0(method.name, ".Q")), color = "darkblue", alpha = .3)
+  # Chochran's Q points
+  if(!is.null(chochran.Q)){
+    p <- p + geom_point(aes(colour = iv.z, shape = factor(chochran.Q)), alpha = 0.8, size=4)
+    p <- p + geom_point(data=NULL, aes(x=iv[which(chochran.Q == 0)], y=iv.se[which(chochran.Q == 0)]), colour="red", size=4.1)
+    p <- p + guides(shape = guide_legend(override.aes = list(size = 5, shape=c(21,21), colour="white", fill=c("red", brewer.pal(9, "Blues")[7]))))
+    p <- p + scale_shape_manual(values=c(19, 19), name = TeX("$\\chi^2_{homogeneity}$"), labels = c("p > 0.05", "p < 0.05"))
   }
+
+  # method estimate before Chochran's Q test
+  p <- p +  geom_vline(aes(xintercept=method.estimate.before.Q, linetype = method.name), color = "darkblue", alpha = .3)
+  # method estimate after Chochran's Q test
+  if(!is.null(chochran.Q)){
+    # method after Q
+    p <- p +  geom_vline(aes(xintercept=method.estimate.after.Q, linetype = paste0(method.name, ".Q")), color = "darkblue")
+    # calc confidence intervals after Q test
+    dfCI.after.Q = calc.95.99.CL(method.estimate = method.estimate.after.Q, iv.se = iv.se)
+    # add confidence interval
+    p <- p + geom_line(aes(y = se.seq, x = ll95), linetype = 'dotted', data = dfCI.after.Q, color = "darkblue", alpha = .6)
+    p <- p + geom_line(aes(y = se.seq, x = ul95), linetype = 'dotted', data = dfCI.after.Q, color = "darkblue", alpha = .6)
+    p <- p + geom_line(aes(y = se.seq, x = ll99), linetype = 'twodash', data = dfCI.after.Q, color = "darkblue", alpha = .6)
+    p <- p + geom_line(aes(y = se.seq, x = ul99), linetype = 'twodash', data = dfCI.after.Q, color = "darkblue", alpha = .6)
+    # shade area
+    p <- p + geom_area(aes(x = dfCI.after.Q$ll99, y = dfCI.after.Q$se.seq), color = "grey", alpha = .1, size = 0)
+    p <- p + geom_area(aes(x = dfCI.after.Q$ul99, y = dfCI.after.Q$se.seq), color = "grey", alpha = .1, size = 0)
+  }
+
   # add confidence interval
   p <- p + geom_line(aes(y = se.seq, x = ll95), linetype = 'dotted', data = dfCI.before.Q, color = "grey")
   p <- p + geom_line(aes(y = se.seq, x = ul95), linetype = 'dotted', data = dfCI.before.Q, color = "grey")
-  p <- p + geom_line(aes(y = se.seq, x = ll99), linetype = 'dashed', data = dfCI.before.Q, color = "grey")
-  p <- p + geom_line(aes(y = se.seq, x = ul99), linetype = 'dashed', data = dfCI.before.Q, color = "grey")
+  p <- p + geom_line(aes(y = se.seq, x = ll99), linetype = 'twodash', data = dfCI.before.Q, color = "grey")
+  p <- p + geom_line(aes(y = se.seq, x = ul99), linetype = 'twodash', data = dfCI.before.Q, color = "grey")
+
+  # shade region
+  if(is.null(chochran.Q)){
+    p <- p + geom_area(aes(x = dfCI.before.Q$ll99, y = dfCI.before.Q$se.seq), color = "grey", alpha = .1, size = 0)
+    p <- p + geom_area(aes(x = dfCI.before.Q$ul99, y = dfCI.before.Q$se.seq), color = "grey", alpha = .1, size = 0)
+  }
 
   # flip y axis
   p <- p + scale_y_reverse()
   # labs for the axes
-  p <- p +  labs(x = TeX("$\\beta_{IV}$"), y = TeX("$\\sigma_{\\beta_{IV}}$"))
+  p <- p +  labs(x = TeX("$\\beta_{IV}$"), y = TeX("$\\sigma_{\\beta_{IV}}$"),
+                 title = paste0(outcome.name, " ~ ", exposure.name))
   # font size and type
   p <- p + theme(axis.text=element_text(size=14, face="bold"), axis.title=element_text(size=14,face="bold"))
   # legend for scale gradient
@@ -63,16 +96,55 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
   # manually change linetye or override the existing one
   p <- p + scale_linetype_manual(name = "Method", values = c(assign(method.name, linetype), assign(paste0(method.name, ".Q"), linetype)))
   # manually change legend, ugly code
-  if(!is.null(method.estimate.after.Q)){lty <- c(assign(method.name, linetype), assign(paste0(method.name, ".Q"), linetype)); co <- c("darkblue", "darkblue"); alp <- c(0.1,1)}
-  if(is.null(method.estimate.after.Q)){lty <- c(assign(method.name, linetype)); co <- c("darkblue"); alp <- c(1)}
+  if(!is.null(chochran.Q)){lty <- c(assign(method.name, linetype), assign(paste0(method.name, ".Q"), linetype)); co <- c("darkblue", "darkblue"); alp <- c(0.1,1)}
+  if(is.null(chochran.Q)){lty <- c(assign(method.name, linetype)); co <- c("darkblue"); alp <- c(.1)}
   p <- p + guides( linetype = guide_legend(override.aes = list(linetype=lty, color=co, alpha=alp)))
-
 
   #  add rug
   p <- p + geom_rug(aes(color = iv.z))
+  # add rug for Chochran's Q
+  if(!is.null(chochran.Q)){
+    p <- p + geom_rug(data=NULL, aes(x=iv[which(chochran.Q == 0)], y=iv.se[which(chochran.Q == 0)]), colour="red")
+  }
 
   # stolen theme for plot
   p <- p + theme_minimal()
+
+  # legend position
+  p <- p + theme(legend.position=position)
+
+  # legend
+  if(legend == FALSE){
+    p <- p + theme(legend.position="none")
+  }
+
+  # shade part in the end, otherwise can't query max/min limits of x/y axis
+  if(!is.null(chochran.Q)){
+    # shade blocks that fall out confidence interval for lower part
+    lowest.value.x.axis <- layer_scales(p)$x$range$range[1]
+    min.term.ll99 <- min(dfCI.after.Q$ll99)
+    lowest.value.y.axis <- layer_scales(p)$y$range$range[1]
+    highest.value.y.axis <- layer_scales(p)$y$range$range[2]
+    p <- p + annotate("rect", xmin=lowest.value.x.axis, xmax=min.term.ll99, ymin=lowest.value.y.axis*-1, ymax=highest.value.y.axis, alpha=0.3, fill="grey")
+
+    # shade blocks that fall out confidence interval for lower part
+    highest.value.x.axis <- layer_scales(p)$x$range$range[2]
+    max.term.ul99 <- max(dfCI.after.Q$ul99)
+    p <- p + annotate("rect", xmin=max.term.ul99, xmax=highest.value.x.axis, ymin=lowest.value.y.axis*-1, ymax=highest.value.y.axis, alpha=0.3, fill="grey")
+  }
+  if(is.null(chochran.Q)){
+    # shade blocks that fall out confidence interval for lower part
+    lowest.value.x.axis <- layer_scales(p)$x$range$range[1]
+    min.term.ll99 <- min(dfCI.before.Q$ll99)
+    lowest.value.y.axis <- layer_scales(p)$y$range$range[1]
+    highest.value.y.axis <- layer_scales(p)$y$range$range[2]
+    p <- p + annotate("rect", xmin=lowest.value.x.axis, xmax=min.term.ll99, ymin=lowest.value.y.axis*-1, ymax=highest.value.y.axis, alpha=0.3, fill="grey")
+
+    # shade blocks that fall out confidence interval for lower part
+    highest.value.x.axis <- layer_scales(p)$x$range$range[2]
+    max.term.ul99 <- max(dfCI.before.Q$ul99)
+    p <- p + annotate("rect", xmin=max.term.ul99, xmax=highest.value.x.axis, ymin=lowest.value.y.axis*-1, ymax=highest.value.y.axis, alpha=0.3, fill="grey")
+  }
 
   return(p)
 }
