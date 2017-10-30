@@ -19,7 +19,8 @@
 #' mr.forest.plot()
 #'
 #' @return forest plot
-mr.forest.plot <- function(SNP, iv, iv.se, chochran.Q = NULL, ivw, ivw.se, egger, egger.se, ivw.Q = NULL, ivw.se.Q = NULL, egger.Q = NULL, egger.se.Q = NULL){
+mr.forest.plot <- function(SNP, iv, iv.se, chochran.Q = NULL, ivw = NULL, ivw.se = NULL, egger = NULL, egger.se = NULL, ivw.Q = NULL, ivw.se.Q = NULL, egger.Q = NULL, egger.se.Q = NULL,
+                           outcome.name, exposure.name){
   require(ggplot2); require(latex2exp);
 
   if(!is.null(chochran.Q)){
@@ -53,11 +54,56 @@ mr.forest.plot <- function(SNP, iv, iv.se, chochran.Q = NULL, ivw, ivw.se, egger
   # horizontal line
   p <- p +   geom_hline(aes(yintercept = 0), colour="grey")
   # add labs
-  p <- p +  xlab(TeX("$\\beta_{IV}$")) + ylab("")
+  p <- p +  labs(x = TeX("$\\beta_{IV}$"), y = "", title = paste0(outcome.name, " ~ ", exposure.name))
   # stolen theme
   p <- p +  theme_minimal()
   # font size and type
   p <- p + theme(axis.text=element_text(size=14, face="bold"), axis.title=element_text(size=14,face="bold"))
+
+  if(!is.null(chochran.Q)){
+    p <- p +  annotate("rect",
+                       xmin = egger - qnorm(0.975)*egger.se,
+                       xmax = egger + qnorm(0.975)*egger.se,
+                       ymin = -Inf,
+                       ymax = df$SNP[length(df$SNP)-4],
+                       fill = "grey", alpha = .6, color = NA)
+
+    p <- p +  annotate("rect",
+                       xmin = ivw - qnorm(0.975)*ivw.se,
+                       xmax = ivw + qnorm(0.975)*ivw.se,
+                       ymin = -Inf,
+                       ymax = df$SNP[length(df$SNP)-4],
+                       fill = "grey", alpha = .4, color = NA)
+
+    p <- p +   annotate("rect",
+                        xmin = egger.Q - qnorm(0.975)*egger.se.Q,
+                        xmax = egger.Q + qnorm(0.975)*egger.se.Q,
+                        ymin = -Inf,
+                        ymax = df$SNP[length(df$SNP)-4],
+                        fill = "steelblue", alpha = .6, color = NA)
+
+    p <- p +  annotate("rect",
+                       xmin = ivw.Q - qnorm(0.975)*ivw.se.Q,
+                       xmax = ivw.Q + qnorm(0.975)*ivw.se.Q,
+                       ymin = -Inf,
+                       ymax = df$SNP[length(df$SNP)-4],
+                       fill = "purple", alpha = .4, color = NA)
+  }
+  if(is.null(chochran.Q)){
+    p <- p +  annotate("rect",
+                       xmin = egger - qnorm(0.975)*egger.se,
+                       xmax = egger + qnorm(0.975)*egger.se,
+                       ymin = -Inf,
+                       ymax = df$SNP[length(df$SNP)-2],
+                       fill = "purple", alpha = .6, color = NA)
+
+    p <- p +  annotate("rect",
+                       xmin = ivw - qnorm(0.975)*ivw.se,
+                       xmax = ivw + qnorm(0.975)*ivw.se,
+                       ymin = -Inf,
+                       ymax = df$SNP[length(df$SNP)-2],
+                       fill = "darkblue", alpha = .4, color = NA)
+  }
 
   return(p)
 
