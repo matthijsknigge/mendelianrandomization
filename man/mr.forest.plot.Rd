@@ -4,9 +4,10 @@
 \alias{mr.forest.plot}
 \title{Plot forest}
 \usage{
-mr.forest.plot(SNP, iv, iv.se, chochran.Q = NULL, ivw, ivw.se, egger,
-  egger.se, ivw.Q = NULL, ivw.se.Q = NULL, egger.Q = NULL,
-  egger.se.Q = NULL)
+mr.forest.plot(SNP, iv, iv.se, chochran.Q = NULL, ivw = NULL,
+  ivw.se = NULL, egger = NULL, egger.se = NULL, ivw.Q = NULL,
+  ivw.se.Q = NULL, egger.Q = NULL, egger.se.Q = NULL, outcome.name,
+  exposure.name)
 }
 \arguments{
 \item{iv}{vector of causal effect estimate}

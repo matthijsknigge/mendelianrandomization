@@ -35,8 +35,11 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
                     outcome.name, exposure.name, legend = TRUE, position = "bottom", show.stats = TRUE){
   require(ggplot2); require("RColorBrewer"); require(latex2exp); require(cowplot); require(gridExtra)
   # check if Chochran's Q is used on data set
-  if(sum(chochran.Q) == length(By)){
+  if(sum(chochran.Q) == 0){
     chochran.Q <- NULL
+    egger.i.Q <- NULL
+    egger.Q <- NULL
+    ivw.Q <- NULL
   }
   # calculate z-score of Instrumental Variable
   iv.z <- iv / iv.se

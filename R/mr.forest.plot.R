@@ -22,6 +22,14 @@
 mr.forest.plot <- function(SNP, iv, iv.se, chochran.Q = NULL, ivw = NULL, ivw.se = NULL, egger = NULL, egger.se = NULL, ivw.Q = NULL, ivw.se.Q = NULL, egger.Q = NULL, egger.se.Q = NULL,
                            outcome.name, exposure.name){
   require(ggplot2); require(latex2exp);
+  # check if Chochran's Q is used on data set
+  if(sum(chochran.Q) == 0){
+    chochran.Q <- NULL
+    ivw.se.Q <- NULL
+    egger.Q <- NULL
+    ivw.Q <- NULL
+    egger.se.Q <- NULL
+  }
 
   if(!is.null(chochran.Q)){
     # create frame

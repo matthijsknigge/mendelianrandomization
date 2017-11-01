@@ -24,6 +24,11 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
   require(ggplot2); require(latex2exp); require("RColorBrewer"); require(ggExtra)
   # calculate z-score for coloring points
   iv.z <- iv / iv.se
+  # check if Chochran's Q is used on data set
+  if(sum(chochran.Q) == 0){
+    chochran.Q <- NULL
+    method.estimate.after.Q <- NULL
+  }
 
   # before Chochran's Q, calculate confidence interval of the chosen method
   # vector of values that spans the range from 0 to the max value of impression
