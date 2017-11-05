@@ -16,10 +16,11 @@
 #'
 #' @return data.frame with removed snps
 mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*10^-8, clump_p2 = 5*10^-8, verbose = FALSE){
+  require(R.utils)
   # plink_bin
   plink_bin <- "exe/"
   # temp folder for clumping
-  tempdir <-   "exe/temp_clump"
+  tempdir <-   getAbsolutePath("exe/temp_clump")
   # Make textfile
   fn <- tempfile(tmpdir = tempdir)
   write.table(data.frame(SNP=data$SNP, P=data$pval), file=fn, row=F, col=T, qu=F)
