@@ -1,4 +1,4 @@
-#' MR funnel plot
+#' Create quantile-quantile plots for p-value distribution
 #' @author Matthijs Knigge
 #'
 #' @param egger vector of pvalues from egger estimate. Default NULL.

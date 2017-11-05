@@ -1,18 +1,18 @@
-#' Perform Chochran's Q test
+#' Perform Cochran's Q test
 #' @author Matthijs Knigge
-#' @description Chochran's Q is a iterative method that tries to find pleiotropic SNPs, and filters those SNPs out.
+#' @description Cochran's Q is a iterative method that tries to find pleiotropic SNPs, and filters those SNPs out.
 #'
 #' @param data data.frame containen SNP, By, Bx, By.se, Bx.se, iv, iv.se
 #' @param pval p value threshold
 #' @keywords chochrans Q
 #' @export
 #' @examples
-#' mr.chochran.Q.test()
+#' mr.cochran.Q.test()
 #'
-#' @return data with column chochran's Q column added which says if the SNPs is used or not in the method.
-mr.chochran.Q.test <- function(data, pval){
+#' @return vector containing  chochran's Q which says if the SNPs is used or not in the method.
+mr.cochran.Q.test <- function(data, pval){
   # add slot
-  data$chochrans.q <- 0
+  data$cochran.Q <- 0
   # deep copy of ivw
   ivw <<- mr.inverse.variance.weighted.method(By = data$By, Bx = data$Bx, By.se = data$By.se, Bx.se = data$Bx.se)$ivw
   # save copy of data
@@ -22,30 +22,30 @@ mr.chochran.Q.test <- function(data, pval){
     data.copy <<- data.copy[-which(is.na(data.copy$iv.se)), ]
   }
   # store chochrans.q.p
-  chochrans.q.p <<- 0.0
+  cochran.Q.p <<- 0.0
 
-  while(pval > chochrans.q.p & length(data.copy$SNP) >= 3){
+  while(pval > cochran.Q.p & length(data.copy$SNP) >= 3){
     # perform chochrans.q
-    data.copy$chochrans.q <<- 1/data.copy$iv.se * (data.copy$iv - ivw)^2
+    data.copy$cochran.Q <<- 1/data.copy$iv.se * (data.copy$iv - ivw)^2
     # determine maximum term
-    chochrans.q.max <- data.copy[which.max(data.copy$chochrans.q), ]$SNP
+    cochran.Q.max <- data.copy[which.max(data.copy$cochran.Q), ]$SNP
     # calcule the p of the sum of chochrans.q terms
-    chochrans.q.p <<-  pchisq(sum(data.copy$chochrans.q), df = length(data.copy$chochrans.q-1), lower.tail = FALSE)
+    cochran.Q.p <<-  pchisq(sum(data.copy$cochran.Q), df = length(data.copy$cochran.Q-1), lower.tail = FALSE)
     # remove maximum term
-    data.copy <<- data.copy[-which(data.copy$SNP == chochrans.q.max), ]
+    data.copy <<- data.copy[-which(data.copy$SNP == cochran.Q.max), ]
     # re-calculate ivw
     ivw <<- mr.inverse.variance.weighted.method(By = data.copy$By, Bx = data.copy$Bx, By.se = data.copy$By.se, Bx.se = data.copy$Bx.se)$ivw
 
   }
   # if not able to perform chochrans.q
   if(length(data.copy$SNP) < 3){
-    return(data)
+    return(data$cochran.Q)
   }
   # intercept between and determine which snps did not participate in the calculation
   int <- Reduce(intersect, list(data.copy$SNP, data$SNP))
   # 0 means not used in Chochrans Q test thus pleiotropic
-  data[data$SNP %in% int, ]$chochrans.q <- 1
+  data[data$SNP %in% int, ]$cochran.Q <- 1
   # clear workspace
-  rm(data.copy, envir = .GlobalEnv); rm(ivw, envir = .GlobalEnv); rm(chochrans.q.p, envir = .GlobalEnv);
-  return(data)
+  rm(data.copy, envir = .GlobalEnv); rm(ivw, envir = .GlobalEnv); rm(cochran.Q.p, envir = .GlobalEnv);
+  return(list(cochran.Q = data$cochran.Q))
 }
