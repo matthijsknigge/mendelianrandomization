@@ -17,6 +17,10 @@
 #' @return data.frame with removed snps
 mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*10^-8, clump_p2 = 5*10^-8, verbose = FALSE){
   require(R.utils)
+  # check if tempt exists
+  if(!dir.exists(paste0(system.file(package="mendelianRandomization", "executables"), "/temp_clump"))){
+    dir.create(file.path(system.file(package="mendelianRandomization", "executables"), "temp_clump"))
+  }
   # plink_bin
   plink_bin <- system.file(package="mendelianRandomization", "executables")
   # temp folder for clumping
