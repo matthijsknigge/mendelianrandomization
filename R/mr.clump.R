@@ -22,7 +22,7 @@ mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*
     dir.create(file.path(system.file(package="mendelianRandomization", "executables"), "temp_clump"))
   }
   # plink_bin
-  plink_bin <- system.file(package="mendelianRandomization", "executables")
+  plink_bin <- paste0(system.file(package="mendelianRandomization", "executables"), "/")
   # temp folder for clumping
   tempdir <-   paste0(system.file(package="mendelianRandomization", "executables"), "/temp_clump")
   # Make textfile
