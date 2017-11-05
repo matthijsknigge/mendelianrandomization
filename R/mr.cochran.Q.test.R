@@ -14,7 +14,7 @@ mr.cochran.Q.test <- function(data, pval){
   # add slot
   data$cochran.Q <- 0
   # deep copy of ivw
-  ivw <<- mr.inverse.variance.weighted.method(By = data$By, Bx = data$Bx, By.se = data$By.se, Bx.se = data$Bx.se)$ivw
+  IVW <<- mr.inverse.variance.weighted.method(By = data$By, Bx = data$Bx, By.se = data$By.se, Bx.se = data$Bx.se)$ivw
   # save copy of data
   data.copy <<- data
   # delete snp if beta.iv.se is not available
@@ -26,7 +26,7 @@ mr.cochran.Q.test <- function(data, pval){
 
   while(pval > cochran.Q.p & length(data.copy$SNP) >= 3){
     # perform chochrans.q
-    data.copy$cochran.Q <<- 1/data.copy$iv.se * (data.copy$iv - ivw)^2
+    data.copy$cochran.Q <<- 1/data.copy$iv.se * (data.copy$iv - IVW)^2
     # determine maximum term
     cochran.Q.max <- data.copy[which.max(data.copy$cochran.Q), ]$SNP
     # calcule the p of the sum of chochrans.q terms
@@ -34,7 +34,7 @@ mr.cochran.Q.test <- function(data, pval){
     # remove maximum term
     data.copy <<- data.copy[-which(data.copy$SNP == cochran.Q.max), ]
     # re-calculate ivw
-    ivw <<- mr.inverse.variance.weighted.method(By = data.copy$By, Bx = data.copy$Bx, By.se = data.copy$By.se, Bx.se = data.copy$Bx.se)$ivw
+    IVW <<- mr.inverse.variance.weighted.method(By = data.copy$By, Bx = data.copy$Bx, By.se = data.copy$By.se, Bx.se = data.copy$Bx.se)$ivw
 
   }
   # if not able to perform chochrans.q
@@ -46,6 +46,6 @@ mr.cochran.Q.test <- function(data, pval){
   # 0 means not used in Chochrans Q test thus pleiotropic
   data[data$SNP %in% int, ]$cochran.Q <- 1
   # clear workspace
-  rm(data.copy, envir = .GlobalEnv); rm(ivw, envir = .GlobalEnv); rm(cochran.Q.p, envir = .GlobalEnv);
+  rm(data.copy, envir = .GlobalEnv); rm(IVW, envir = .GlobalEnv); rm(cochran.Q.p, envir = .GlobalEnv);
   return(list(cochran.Q = data$cochran.Q))
 }
