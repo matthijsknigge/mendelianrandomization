@@ -20,7 +20,7 @@ mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*
   # plink_bin
   plink_bin <- system.file(package="mendelianRandomization", "executables")
   # temp folder for clumping
-  tempdir <-   paste0(system.file(package="mendelianRandomization", "executables"), "temp_clump")
+  tempdir <-   paste0(system.file(package="mendelianRandomization", "executables"), "/temp_clump")
   # Make textfile
   fn <- tempfile(tmpdir = tempdir)
   write.table(data.frame(SNP=data$SNP, P=data$pval), file=fn, row=F, col=T, qu=F)
