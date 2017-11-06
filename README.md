@@ -105,7 +105,7 @@ We need both files at least to contain the SNP id, beta, se, pval, effect allele
 
 
 ```
-celiac <- mr.find.missing.allelic.information(data = celiac, thousand.G = "path/to/reference")
+celiac <- mr.find.missing.allelic.information(data = celiac, thousand.G = "path/to/reference.bim")
 head(celiac)
 ```
 |SNPs       | effect_allele | Z_OR       | P       | se          | other_allele |
@@ -122,14 +122,32 @@ Now that we have what we need, we can start pre-processing the data. But first l
 ```
 # exposure amount of SNPs
 length(exposure$SNP)
-91864
+> 91864
 
 # outcome amount of SNPs
 length(outcome$rsid)
-242276
+> 242276
 ```
+The next step is to pre-process the exposure, and only the exposure because we are interested in the effect of the exposure on the outcome. We select for genome-wide significance, thus the p-value of the exposure must > 5*10^-8. Also the SNPs without effectsize will be removed, the SNPs from which it is impossible to measure the strand will be removed, and the duplicates will be removed. Besides this, also all negative effectsizes are flipped, and their alleles are also flipped. This is done because we want to measure the positive effect of the exposure on the outcome.
 
+```
+celiac <- mr.pre.process(B = celiac$Z_OR, B.se = celiac$se, pval = celiac$P, effect_allele = celiac$effect_allele, other_allele = celiac$other_allele, SNP = celiac$SNP)
 
+# amount of SNP left
+length(celiac$SNP)
+> 1753
+
+head(celiac)
+
+```
+|  SNP    |      beta  |se        |  effect_allele | other_allele |     pval     |
+|---------|-----------|-----------|------|----------------------------------------  
+|rs1002658| 0.1870527| 0.02449381 |  C  |   T |2.228e-14|
+|rs10027390| 0.1935847| 0.02094385| T |     C |2.396e-20|
+|rs1013907| 0.1655144| 0.02500311|  T  |    C |3.598e-11|
+|rs1014486| 0.1445635| 0.01892568|  T |     C |2.198e-14|
+|rs1015811| 0.2089941| 0.02220817 |  A  |   G |4.929e-21|
+|rs10165460| 0.1773090| 0.02143430 |    C | T |1.315e-16|
 
 
 
