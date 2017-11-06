@@ -305,5 +305,5 @@ p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se, iv = h$iv, 
 ggdraw(p)
 ```
 
-![Scheme](inst/img/hdl~celiac.png = 100x100)
+![Scheme](inst/img/hdl~celiac.png)
 
