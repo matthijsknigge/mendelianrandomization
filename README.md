@@ -295,5 +295,12 @@ egger.Q
 0.4554338
 ```
 
+Now it is time for plotting the results, with the most fancy plotting function. This is done with `mr.plot`.
+
+```
+
+
+
+```
 
 
