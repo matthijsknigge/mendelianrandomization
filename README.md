@@ -39,7 +39,7 @@ This package provides functionality for the following operations:
   * Test data for trying the package.
 
 # Installing Mendelian Randomization
-The package is hosted on bitbucket, and this allows for a smooth installation, and updates are easy to install. Before installen Mendelian Randomization, make sure you have installed `devtools`:
+The package is hosted on bitbucket, and this allows for a smooth installation, and updates are easy to install. Before installing Mendelian Randomization, make sure you have installed `devtools`:
 
 ```
 install.packages("devtools")
@@ -51,7 +51,18 @@ And then you are ready to install the `mendelianRandomization` package:
 devtools::install_bitbucket("matthijsknigge/mendelianRandomization")
 ```
 
+# Tutorial
+The package also contains test data for doing a basic Mendelian Randomization analysis. The first step is to read the data. For this analysis we want to infer causality between an exposure and outcome. In this setup the exposure is Celiac Disease, and the outcome is High-density-lipoproteïne (HDL).
 
+```
+# the exposure
+exposure <- data("celiac")
+
+# the outcome
+outcome  <- data("hdl")
+
+
+```
 
 
 
