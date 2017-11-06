@@ -101,7 +101,7 @@ Here we see the idenfication for the position in a chromosome for a SNP, the SNP
 |16:56993324 |rs3764261|  A | C| 0.2387770| 0.002775| 310132|       0  |       0.31250|
 |16:56995236 |rs1800775|  A | C| 0.1901360| 0.002690| 285413|       0 |        0.50581|
 
-We need both files at least to contain the SNP id, beta, se, pval, effect allele and the other allele. Since the other allele is missing for the exposure, we have to query it.
+We need both files at least to contain the SNP id, beta, se, pval, effect allele and the other allele. Since the other allele is missing for the exposure, we have to query it. The alles are queried with `mr.find.missing.alleles`.
 
 
 ```
@@ -129,7 +129,7 @@ length(exposure$SNP)
 length(outcome$rsid)
 > 242276
 ```
-The next step is to pre-process the exposure, and only the exposure because we are interested in the effect of the exposure on the outcome. We select for genome-wide significance, thus the p-value of the exposure must > 5*10^-8. Also the SNPs without effectsize will be removed, the SNPs from which it is impossible to measure the strand will be removed, and the duplicates will be removed. Besides this, also all negative effectsizes are flipped, and their alleles are also flipped. This is done because we want to measure the positive effect of the exposure on the outcome.
+The next step is to pre-process the exposure, and only the exposure because we are interested in the effect of the exposure on the outcome. We select for genome-wide significance, thus the p-value of the exposure must > 5*10^-8. Also the SNPs without effectsize will be removed, the SNPs from which it is impossible to measure the strand will be removed, and the duplicates will be removed. Besides this, also all negative effectsizes are flipped, and their alleles are also flipped. This is done because we want to measure the positive effect of the exposure on the outcome. This is done with `mr.pre.process`.
 
 ```
 celiac <- mr.pre.process(B = celiac$Z_OR, B.se = celiac$se, 
@@ -153,7 +153,7 @@ head(celiac)
 |rs10165460| 0.1773090| 0.02143430 |    C | T |1.315e-16|
 
 
-Now it is time to combine exposure and outcome, the next step is to harmonize both datasets. This includes aligning SNPs, and taking the intercept.
+Now it is time to combine exposure and outcome, the next step is to harmonize both datasets. This includes aligning SNPs, and taking the intercept. Herefore we use `mr.harmonize`.
 
 ```
 h <- mr.harmonize(By = hdl$Beta, Bx = celiac$beta, By.se = hdl$SE, Bx.se = celiac$se, 
@@ -177,8 +177,19 @@ head(h)
 |rs1044429 |-0.0021610 |0.2879488 |0.003677 |0.02846428 | 4.685000e-24        |     C |           T|
 
 
+We do not want out data set to suffer from pleiotropic effects which can be reintroduced by linkage equilibrium. So we will clump our data set, and the SNPs that are in LD with each other will be removed en will be replaced by a suitable proxy. The clump methods has various other parameters that can be used, but here we use the default, this is done with `mr.clump`. Within the table itself nothing changes, it is the same as the previous table shown
 
+```
+h <- mr.clump(data = h, refdat = "path/to/reference", verbose = T)
 
+# Amount of SNPs left?
+length(h$SNP)
+> 53
+
+head(h)
+```
+
+Now it is time to estimate the causalty bewteen regression of the outcome on the genotype and the regression from the exposure on the genotype. Here we use the `mr.wald.method` to calculate the causal estimate between genetic variants.
 
 
 
