@@ -4,37 +4,37 @@ Mendelian Randomization (MR) refers to the random segregation and assortment of 
 
 This package provides functionality for the following operations:
 
-  * Calculation the standard deviation from the effectsize or log odd score when it is not present.
+  * Calculate the standard deviation from the effectsize or log odd score when it is not present. `mr.calculate.se()`
   
-  * Clumping, for pruning SNPs that are in linkage disequilibrium (LD). ALso is provided a method for finding proxy SNPs for replacing SNPs that are in LD.
+  * Clumping, for pruning SNPs that are in linkage disequilibrium (LD). ALso is provided a method for finding proxy SNPs for replacing SNPs that are in LD. `mr.clump()`
   
-  * Cochran's Q test, for determining SNPs that overfit the model, or the ones that introduce pleiotropic effects.
+  * Cochran's Q test, for determining SNPs that overfit the model, or the ones that introduce pleiotropic effects. `mr.cochran.Q.test()`
   
-  * Mendelian Randomization Egger method (MR-egger method) for estimating causality, testing causality, and for testing the overall pleiotropy within the data set.
+  * Mendelian Randomization Egger method (MR-egger method) for estimating causality, testing causality, and for testing the overall pleiotropy within the data set. `mr.egger.method()`
   
-  * When your data set misses allelic information, this can be queried by using a reference file.
+  * When your data set misses allelic information, this can be queried by using a reference file. `mr.find.missing.allelic.information()`
   
-  * Forest plotting the MR analysis, for seeing the overall weight a SNP brings into the study.
+  * Forest plotting the MR analysis, for seeing the overall weight a SNP brings into the study. `mr.forest.plot()`
   
-  * Funnel plotting the methods used with the MR analysis to detect study bias.
+  * Funnel plotting the methods used with the MR analysis to detect study bias. `mr.funnel.plot()`
   
-  * Get the chromosome number and position of SNPs.
+  * Get the chromosome number and position of SNPs. `mr.get.chr.pos()`
   
-  * Harmonization of the data set. Align SNPs, remove problematic SNPs, for example palindromic SNPs, mismatch SNPs, and SNPs that have a wrong reference.
+  * Harmonization of the data set. Align SNPs, remove problematic SNPs, for example palindromic SNPs, mismatch SNPs, and SNPs that have a wrong reference. `mr.harmonize()`
   
-  * Inverse-Variance Weighted method for averaging the estimate ratios.
+  * Inverse-Variance Weighted method for averaging the estimate ratios. `mr.inverse.variance.weighted.method()`
   
-  * A highly fasionable way of plotting MR results.
+  * A highly fasionable way of plotting MR results. `mr.plot()`
   
-  * The functionality to pre-process data, which test the data set on missing alleles, missing beta's, selects for genome-wide significance, removes duplicates,  and removes alleles from which it is not possible to measure direction.
+  * The functionality to pre-process data, which test the data set on missing alleles, missing beta's, selects for genome-wide significance, removes duplicates,  and removes alleles from which it is not possible to measure direction. `mr.pre.process()`
   
-  * qq-plot for the p-value distribution of a chosen method.
+  * qq-plot for the p-value distribution of a chosen method. `mr.qq.p.distribution()`
   
-  * A normal qq-plot for plotting the theoretical quantiles against the normal quantiles.
+  * A normal qq-plot for plotting the theoretical quantiles against the normal quantiles. `mr.qq.plot()`
   
-  * Remove a certain region within a chromosome.
+  * Remove a certain region within a chromosome. `mr.remove.region()`
   
-  * Perform wald-ratio for obtaining a causal estimate based on the exposure regression on genotype and the outcome regression of genotype.
+  * Perform wald-ratio for obtaining a causal estimate based on the exposure regression on genotype and the outcome regression of genotype. `mr.wald.ratio()`
   
   * Test data for trying the package.
 
