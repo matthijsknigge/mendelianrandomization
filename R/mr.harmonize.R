@@ -24,6 +24,14 @@ mr.harmonize <- function(By, Bx, By.se, Bx.se, outcome.pval, exposure.pval, outc
   # assign data slots
   o <- data.frame(beta = By, se = By.se, pval = outcome.pval, effect_allele = outcome.effect_allele, SNP = outcome.SNP)
   e <- data.frame(beta = Bx, se = Bx.se, pval = exposure.pval, effect_allele = exposure.effect_allele, other_allele = exposure.other_allele, SNP = exposure.SNP)
+  # delete exposures without effectsize or OR
+  if(length(which(is.na(e$beta)) > 0)){
+    e <- e[-which(is.na(e$beta)), ]
+  }
+  # delete outcome without effectsize or OR
+  if(length(which(is.na(o$beta)) > 0)){
+    o <- o[-which(is.na(o$beta)), ]
+  }
   # find intersect between exposures and Celiac
   int <- Reduce(intersect, list(o$SNP, e$SNP))
   # intersect between data sets
