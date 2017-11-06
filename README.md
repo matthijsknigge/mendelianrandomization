@@ -2,7 +2,7 @@
 
 ---
 
-Mendelian Randomization (MR) refers to the random segregation and assortment of genes from parents to offspring that occur during gamete formation and provides a method of using genetic variants in observational settings to make casual inferences regarding the relationship between exposure and outcomes. The basic principle utilized in the MR framework is that if genetic variants either alter the level of or mirror the biological effects of a modifiable exposure that itself alters disease risk, then these genetic variants should be related to disease risk. MR studies aim to provide evidence for or against a causal relationship between a modifiable exposure variable and a disease. Genetic variants are used because these are less susceptible for confounding because of it is subjected to Mendel’s first law, the law of of segregation. These genetic variants segregate independently and randomly from environmental factors, and it can be assumed that genetic variants segregate independently from other traits.
+Mendelian Randomization (MR) is the process that refers to the random segregation and assortment of genes from ancestors to offspring that takes place during gamete formation and gives a method of using genetic variants to make casual inferences regarding the relationship between exposure and outcomes. The basic principle utilized in the MR pipeline, is that if a genetic variant either alters the level of or mimics the biological effects of a exposure that itself alters disease risk, then these genetic variants should be related to disease risk.The goal of MR studies is to provide evidence for or against a causal relationship between a exposure and a disease. Genetic variants are used because these are less susceptible for confounding because of it is subjected to Mendel’s first law, the law of of segregation. These genetic variants segregate independently and randomly from environmental factors, and it can be assumed that genetic variants segregate independently from other traits.
 
 This package provides functionality for the following operations:
 
@@ -189,11 +189,26 @@ length(h$SNP)
 head(h)
 ```
 
-Now it is time to estimate the causalty bewteen regression of the outcome on the genotype and the regression from the exposure on the genotype. Here we use the `mr.wald.method` to calculate the causal estimate between genetic variants.
+Now it is time to estimate the causalty bewteen regression of the outcome on the genotype and the regression from the exposure on the genotype. Here we use the `mr.wald.method` to calculate the causal estimate between genetic variants. This method return the causal estimate, the standard error of the causal estimate, and the p-value.
 
+```
+wald    <- mr.wald.ratio(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se)
+h$iv    <- wald$iv
+h$iv.se <- wald$iv.se
+h$iv.p  <- wald$iv.p
 
+head(h)
 
+```
 
+|        SNP    |     By   |     Bx   | By.se  |    Bx.se   |       pval effect_allele |other_allele      |     iv   |    iv.se   |   iv.p|
+|-----------|--------|---------|--------|----------|---------------|--------------|----------------------|-----------|----------------|
+|rs1041981 |-0.0074565 |0.8779656 |0.002782 |0.02282362 |9.881313e-324       |      A     |       C |-0.008492929| 0.003176371 |0.9962500|
+|rs10499194 | 0.0023330| 0.1577070 |0.002913 |0.02091290 | 4.659000e-14      |       C     |       T | 0.014793256| 0.018574838| 0.2128958|
+|rs1050976 |-0.0586600 |0.1110433 |0.033332 |0.01847177  |1.838000e-09       |      C       |     T |-0.528262404 |0.312769539 |0.9543886|
+|rs10946808 |-0.0082867 |0.1594648| 0.002833 |0.02122679|  5.804000e-14      |       A      |      G |-0.051965709 |0.019064846 |0.9967921|
+|rs11066320 |-0.0329290 |0.1388920| 0.033323 |0.01871192 | 1.148000e-13      |       A      |      G |-0.237083491 |0.242037010 |0.8363419|
+|rs11221332 |-0.0027210 |0.1544364| 0.003122| 0.02177457|  1.317000e-12      |       T      |      C |-0.017618909| 0.020367507| 0.8064943|
 
 
 
