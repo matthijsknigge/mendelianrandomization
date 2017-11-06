@@ -74,6 +74,8 @@ Lets check out the data.
 ```
 head(exposure)
 ```
+Here we se a column with SNP identifiers, the effect allele, the effectsize, the pvalue, and the standard deviation.
+
 |SNPs       | effect_allele | Z_OR       | P       | se          |
 |-----------|---------------|------------|---------|-------------|
 |rs61733845 | T             | 0.03536714 |4.249e-01| 0.04432255  |
@@ -88,6 +90,8 @@ head(exposure)
 head(outcome)
 ```
 
+Here we see the idenfication for the position in a chromosome for a SNP, the SNP identifiers, the effect allele (A1), the other allele (A2), the effectsize, the standard error, population size, the p value, and the frequence of the effect allele over the other allele.
+
 | SNP_hg19  |  rsid    |A1 |A2 | Beta |    SE  | N     |P.value   | Freq.A1.ESP.EUR |
 |-----------|----------|---|---|------|--------|-------|----------|-----------------|
 |15:58723675 |rs1800588|  T|  C| 0.1180589| 0.002991| 316391|       0  |       0.24468|
@@ -96,6 +100,51 @@ head(outcome)
 |16:56989590 | rs247616|  T | C| 0.2424130| 0.002758| 316391|       0   |      0.30817|
 |16:56993324 |rs3764261|  A | C| 0.2387770| 0.002775| 310132|       0  |       0.31250|
 |16:56995236 |rs1800775|  A | C| 0.1901360| 0.002690| 285413|       0 |        0.50581|
+
+We need both files at least to contain the SNP id, beta, se, pval, effect allele and the other allele. Since the other allele is missing for the exposure, we have to query it.
+
+
+```
+celiac <- mr.find.missing.allelic.information(data = celiac, thousand.G = "path/to/reference")
+head(celiac)
+```
+|SNPs       | effect_allele | Z_OR       | P       | se          | other_allele |
+|-----------|---------------|------------|---------|-------------|--------------|
+|rs61733845 | T             | 0.03536714 |4.249e-01| 0.04432255  |C|
+|rs1320571  | A             | 0.01882175 |6.590e-01| 0.04265126  |G|
+|rs9729550  | A             | 0.10048354 |2.465e-06| 0.02132954  |A|
+|rs1815606  | G             | 0.06774365 |7.151e-04| 0.02002045  |G|
+|rs7515488  | T             | -0.10280822|1.195e-04| 0.02672322  |C|
+|rs11260562 | A             | -0.03936472|3.344e-01| 0.04078024  |C|
+
+Now that we have what we need, we can start pre-processing the data. But first let's check out how many SNPs we have for exposure and outcome.
+
+```
+# exposure amount of SNPs
+length(exposure$SNP)
+91864
+
+# outcome amount of SNPs
+length(outcome$rsid)
+242276
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
