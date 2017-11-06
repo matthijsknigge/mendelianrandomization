@@ -39,8 +39,17 @@ This package provides functionality for the following operations:
   * Test data for trying the package.
 
 # Installing Mendelian Randomization
-The package is hosted on bitbucket, and this allows for a smooth installation, and updates are easy to install. Before installen Mendelian Randomization, make sure you have installed <pre>devtools<code>:
+The package is hosted on bitbucket, and this allows for a smooth installation, and updates are easy to install. Before installen Mendelian Randomization, make sure you have installed `devtools`:
 
+```
+install.packages("devtools")
+```
+
+And then you are ready to install the `mendelianRandomization` package:
+
+```
+devtools::install_bitbucket("matthijsknigge/mendelianRandomization")
+```
 
 
 
