@@ -253,7 +253,7 @@ h$cochran.Q <- mr.cochran.Q.test(data = h, pval = .05)$cochran.Q
 head(h[order(h$cochran.Q),])
 ```
 
-| SNP      |   By   |     Bx   | By.se|      Bx.se   |       pval |effect_allele |other_allele  |         iv   |    iv.se   |   iv.p cochran.Q|
+| SNP      |   By   |     Bx   | By.se|      Bx.se   |       pval |effect_allele |other_allele  |         iv   |    iv.se   |   iv.p|cochran.Q|
 |---------|-----------|-----------|--------|------------|------------|-------------|--------------|--------------|-----------|----------------|-------------------|
 |rs181362 |-0.0281524 |0.1406311 |0.002979 |0.02291441  |8.397000e-10     |        T         |   C |-0.200186118 |0.038893130 |0.9999999       |  0|
 |rs1041981 |-0.0074565 |0.8779656 |0.002782| 0.02282362 |9.881313e-324     |        A        |    C |-0.008492929 |0.003176371 |0.9962500      |   1|
@@ -261,5 +261,39 @@ head(h[order(h$cochran.Q),])
 |rs1050976 |-0.0586600 |0.1110433 |0.033332 |0.01847177  |1.838000e-09       |      C        |    T |-0.528262404 |0.312769539 |0.9543886      |   1|
 |rs10946808 |-0.0082867| 0.1594648 |0.002833 |0.02122679  |5.804000e-14     |        A      |      G |-0.051965709 |0.019064846 |0.9967921     |    1|
 |rs11066320| -0.0329290 |0.1388920 |0.033323 |0.01871192  |1.148000e-13     |        A     |       G |-0.237083491 |0.242037010 |0.8363419     |    1|
+
+After the Cochran's Q test is applied, the estimates can be recalculated.
+
+```
+# inverse-variance weighted after Cochran's Q test
+inverse.variance.weighted.Q <- mr.inverse.variance.weighted.method(By = h[which(h$cochran.Q == 1),]$By, Bx = h[which(h$cochran.Q == 1),]$Bx, 
+                                                                   By.se = h[which(h$cochran.Q == 1),]$By.se, Bx.se = h[which(h$cochran.Q == 1),]$Bx.se)
+inverse.variance.weighted.Q
+> $ivw
+-0.01095541
+> $ivw.se
+0.00146401
+> $ivw.p
+7.255972e-14
+
+
+# mr-egger method after Cochran's Q test
+egger.Q <- mr.egger.method(By = h[which(h$cochran.Q == 1),]$By, Bx = h[which(h$cochran.Q == 1),]$Bx, 
+                           By.se = h[which(h$cochran.Q == 1),]$By.se, Bx.se = h[which(h$cochran.Q == 1),]$Bx.se)
+egger.Q
+> $egger
+-0.00823968
+> $egger.se
+0.002417789
+> $egger.p
+0.001300889
+> $egger.i
+-0.001192398
+> $egger.i.se
+0.001585131
+> $egger.i.p
+0.4554338
+```
+
 
 
