@@ -200,6 +200,7 @@ h$iv.p  <- wald$iv.p
 head(h)
 
 ```
+This results in the newly added columns: iv: the estimate, iv.se: the standard error of the causal estime, iv.p the test of the causal estimate.
 
 |        SNP    |     By   |     Bx   | By.se  |    Bx.se   |       pval effect_allele |other_allele      |     iv   |    iv.se   |   iv.p|
 |-----------|--------|---------|--------|----------|---------------|--------------|----------------------|-----------|----------------|
@@ -211,6 +212,36 @@ head(h)
 |rs11221332 |-0.0027210 |0.1544364| 0.003122| 0.02177457|  1.317000e-12      |       T      |      C |-0.017618909| 0.020367507| 0.8064943|
 
 
+Now with multiple genetic variants, their ratio estimates from the Two-sample MR can be averaged by using an Inverse Variance Weighted method to provide an overall causal estimate. This method assumes that the ratio estimates are all uncorrelated, that there is no pleiotropy. This method can be deployed with `mr.inverse.variance.weighted.method`, and will return the ivw estimate, the standard error of the estimate, and a test of the method. And also the MR-egger can be performed with a modification to the weighted linear regression from the Inverse-Variance Weighted method. Instead of setting the intercept parameter to zero, the term is estimated as part of the analysis. To see if the estimate is significant one could the test the slope and see if it is significant different than zero, this is the test for causal effect. And the intercept from the regression can be interpreted as an average pleiotropic effect. If the average pleiotropic effect is zero, then the IVW gives an constant estimate of the causal effect. But, if this is not zero, than the average pleiotropic effects differ from zero and there is pleiotropy, and than the IVW estimate is biased. This method is performed with `mr.egger.method`, and return a causal estimate, the standard error of the estimate, a test for pleiotropy, and a test for the causal estimate.
+
+```
+# inverse-variance weighted method
+inverse.variance.weighted <- mr.inverse.variance.weighted.method(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se)
+inverse.variance.weighted
+> $ivw
+[1] -0.01185497
+>$ivw.se
+[1] 0.001460526
+>$ivw.p
+[1] 4.781548e-16
+
+
+# mr-egger method
+egger <- mr.egger.method(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se)
+egger
+> $egger
+-0.00599758
+> $egger.se
+0.002403306
+> $egger.p
+0.01585264
+> $egger.i
+-0.002546125
+> $egger.i.se
+0.001829527
+> $egger.i.p
+0.1700582
+```
 
 
 
