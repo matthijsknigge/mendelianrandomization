@@ -105,7 +105,8 @@ We need both files at least to contain the SNP id, beta, se, pval, effect allele
 
 
 ```
-celiac <- mr.find.missing.allelic.information(data = celiac, thousand.G = "path/to/reference.bim")
+celiac <- mr.find.missing.allelic.information(data = celiac, 
+                                              thousand.G = "path/to/reference.bim")
 head(celiac)
 ```
 |SNPs       | effect_allele | Z_OR       | P       | se          | other_allele |
@@ -131,7 +132,9 @@ length(outcome$rsid)
 The next step is to pre-process the exposure, and only the exposure because we are interested in the effect of the exposure on the outcome. We select for genome-wide significance, thus the p-value of the exposure must > 5*10^-8. Also the SNPs without effectsize will be removed, the SNPs from which it is impossible to measure the strand will be removed, and the duplicates will be removed. Besides this, also all negative effectsizes are flipped, and their alleles are also flipped. This is done because we want to measure the positive effect of the exposure on the outcome.
 
 ```
-celiac <- mr.pre.process(B = celiac$Z_OR, B.se = celiac$se, pval = celiac$P, effect_allele = celiac$effect_allele, other_allele = celiac$other_allele, SNP = celiac$SNP)
+celiac <- mr.pre.process(B = celiac$Z_OR, B.se = celiac$se, 
+                         pval = celiac$P, effect_allele = celiac$effect_allele, 
+                         other_allele = celiac$other_allele, SNP = celiac$SNP)
 
 # amount of SNP left
 length(celiac$SNP)
@@ -150,8 +153,28 @@ head(celiac)
 |rs10165460| 0.1773090| 0.02143430 |    C | T |1.315e-16|
 
 
+Now it is time to combine exposure and outcome, the next step is to harmonize both datasets. This includes aligning SNPs, and taking the intercept.
 
+```
+h <- mr.harmonize(By = hdl$Beta, Bx = celiac$beta, By.se = hdl$SE, Bx.se = celiac$se, 
+                  outcome.pval = hdl$P.value, exposure.pval = celiac$pval, 
+                  outcome.effect_allele = hdl$A1, exposure.effect_allele = celiac$effect_allele, 
+                  exposure.other_allele = celiac$other_allele, outcome.SNP = hdl$rsid, 
+                  exposure.SNP = celiac$SNP)
+# how many SNPs after harmonization?
+length(h$SNP)
+> 252
 
+head(h)
+```
+|        SNP|         By|        Bx|    By.se|      Bx.se|          pval| effect_allele| other_allele|
+|------------|----------|-----------|---------|-----------|--------------|--------------|------------------|
+|rs10181042 | 0.0048080 |0.1239860 |0.002673| 0.01881433 | 4.399000e-11  |           T     |       C|
+|rs1018326 |-0.0042400 |0.1518623 |0.002660 |0.01858594 | 3.063000e-16    |         C     |       T|
+|rs10188217 | 0.0054544 |0.1232982 |0.002679 |0.01851350 | 2.740000e-11    |         C   |         T|
+|rs1041981 |-0.0074565 |0.8779656 |0.002782 |0.02282362 |9.881313e-324      |       A   |         C|
+|rs1042127 |-0.0171800 |0.3063893 |0.003540 |0.02583651 | 1.938000e-32       |      A  |          C|
+|rs1044429 |-0.0021610 |0.2879488 |0.003677 |0.02846428 | 4.685000e-24        |     C |           T|
 
 
 
