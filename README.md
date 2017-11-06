@@ -298,9 +298,12 @@ egger.Q
 Now it is time for plotting the results, with the most fancy plotting function. This is done with `mr.plot`.
 
 ```
-
-
-
+p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se, iv = h$iv, iv.se = h$iv.se, ivw = inverse.variance.weighted$ivw,
+             egger = egger$egger, egger.i = egger$egger.i, chochran.Q = h$cochran.Q, ivw.Q = inverse.variance.weighted.Q$ivw, egger.Q = egger.Q$egger,
+             egger.i.Q = egger.Q$egger.i, egger.p.fdr = egger$egger.p, ivw.p.fdr = inverse.variance.weighted$ivw.p, egger.i.p = egger$egger.i.p,
+             outcome.name = "High-density-lipoproteïne (HDL)", exposure.name = "Celiac")
+ggdraw(p)
 ```
 
+![Scheme](inst/img/hdl~celiac.png)
 
