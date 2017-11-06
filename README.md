@@ -243,7 +243,23 @@ egger
 0.1700582
 ```
 
+After this, the Cochran's Q test can be applied. Which is a method that is used to find SNPs which have an effect that is to great and can bias the estimates, and or removes possible pleiotropic causing SNPs. This is an iterative method that calculates the Q term for each SNP, calculates an overal Q term. Than this overal term is tested, and if this test does not exceeds a given threshold it removes the max Q term and restarts the iteration until this threshold is met. This function returns a vector with 1 or 0 indicating the SNPs should be used in re-calculating the estimates from IVW and MR-egger. This method is called by `mr.cochrans.Q.test`.
 
+```
+# apply cochran's Q test
+h$cochran.Q <- mr.cochran.Q.test(data = h, pval = .05)$cochran.Q
 
+# the data has been order decreasing to show that on SNP is removed
+head(h[order(h$cochran.Q),])
+```
+
+| SNP      |   By   |     Bx   | By.se|      Bx.se   |       pval |effect_allele |other_allele  |         iv   |    iv.se   |   iv.p cochran.Q|
+|---------|-----------|-----------|--------|------------|------------|-------------|--------------|--------------|-----------|----------------|-------------------|
+|rs181362 |-0.0281524 |0.1406311 |0.002979 |0.02291441  |8.397000e-10     |        T         |   C |-0.200186118 |0.038893130 |0.9999999       |  0|
+|rs1041981 |-0.0074565 |0.8779656 |0.002782| 0.02282362 |9.881313e-324     |        A        |    C |-0.008492929 |0.003176371 |0.9962500      |   1|
+|rs10499194 | 0.0023330| 0.1577070 |0.002913| 0.02091290 | 4.659000e-14     |        C       |     T | 0.014793256 |0.018574838 |0.2128958     |    1|
+|rs1050976 |-0.0586600 |0.1110433 |0.033332 |0.01847177  |1.838000e-09       |      C        |    T |-0.528262404 |0.312769539 |0.9543886      |   1|
+|rs10946808 |-0.0082867| 0.1594648 |0.002833 |0.02122679  |5.804000e-14     |        A      |      G |-0.051965709 |0.019064846 |0.9967921     |    1|
+|rs11066320| -0.0329290 |0.1388920 |0.033323 |0.01871192  |1.148000e-13     |        A     |       G |-0.237083491 |0.242037010 |0.8363419     |    1|
 
 
