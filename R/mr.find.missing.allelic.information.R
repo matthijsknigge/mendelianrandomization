@@ -5,6 +5,7 @@
 #' @param thousand.G absolute location to 1000Genomes file
 #' @param data data.frame that must contain effect_allele, and SNP columns
 #' @keywords missing allele
+#' @import data.table
 #' @export
 #' @examples
 #' mr.find.missing.allelic.information(data = outcome, thousand.G = '/path/to/thousand/genomes/file.bim')
