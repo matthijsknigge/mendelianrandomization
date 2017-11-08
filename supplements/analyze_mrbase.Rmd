@@ -1,0 +1,90 @@
+```{r}
+# libraries
+source("MRfunctions.R")
+library(data.table)
+```
+
+
+```{r}
+# data
+mrbase.methods.2011 <- read.table("~/Bioinformatics/Internship/Src/R/cluster_results/mrbase/2011/all_methods_mrbase_2011.txt", header = T, fill = T)
+mrbase.calculations.2011 <- read.table("~/Bioinformatics/Internship/Src/R/cluster_results/mrbase/2011/all_calculations_mrbase_2011.txt", header = T, fill = T)
+
+mrbase.methods.2010 <- read.table("~/Bioinformatics/Internship/Src/R/cluster_results/mrbase/2010/all_methods_mrbase_2010.txt", header = T, fill = T)
+mrbase.calculations.2010 <- read.table("~/Bioinformatics/Internship/Src/R/cluster_results/mrbase/2010/all_calculations_mrbase_2010.txt", header = T, fill = T)
+
+
+```
+
+```{r}
+mrbase.methods.2011$nSNP <- 0
+for(id in mrbase.methods.2011$identifier){
+  mrbase.methods.2011[which(mrbase.methods.2011$identifier == id), ]$nSNP <- length(mrbase.calculations.2011[which(mrbase.calculations.2011$identifier == id), ]$SNP)
+}
+
+mrbase.methods.2010$nSNP <- 0
+for(id in mrbase.methods.2010$identifier){
+  mrbase.methods.2010[which(mrbase.methods.2010$identifier == id), ]$nSNP <- length(mrbase.calculations.2010[which(mrbase.calculations.2010$identifier == id), ]$SNP)
+}
+
+
+```
+
+```{r}
+
+mr.chochrans.q.2010 <- mr.chochrans.q.data.set(calculations = mrbase.calculations.2010, methods = mrbase.methods.2010, p.threshold = 0.05)
+mr.chochrans.q.2011 <- mr.chochrans.q.data.set(calculations = mrbase.calculations.2011, methods = mrbase.methods.2011, p.threshold = 0.05)
+
+mrbase.calculations.2010 <- mr.chochrans.q.2010$calculations
+mrbase.methods.2010 <- mr.chochrans.q.2010$methods
+
+mrbase.calculations.2011 <- mr.chochrans.q.2011$calculations
+mrbase.methods.2011 <- mr.chochrans.q.2011$methods
+
+```
+
+```{r}
+temp.df <<- setNames(data.frame(matrix(ncol = 19, nrow = 0)), c("phenotype", "beta.ivw", "beta.ivw.se", "beta.ivw.p", "beta.egger", "beta.egger.se", "beta.egger.p", 
+                                                                              "beta.egger.i", "beta.egger.i.se", "beta.egger.i.p", "beta.egger.Q", "beta.egger.p.Q", "beta.egger.i.Q",
+                                                                              "beta.ivw.Q", "beta.ivw.p.Q", "beta.egger.p.fdr", "nSNP", "beta.egger.p.fdr", "beta.ivw.p.fdr"))
+for(database in unique(mrbase.calculations.2011$database)){
+  e <- mrbase.calculations.2011[which(mrbase.calculations.2011$database == database), ]$identifier
+  int <- Reduce(intersect, list(e, mrbase.methods.2011$identifier))
+  x <- mrbase.methods.2011[mrbase.methods.2011$identifier %in% int, ]
+  x$beta.ivw.p.fdr <- p.adjust(p = x$beta.ivw.p, method = "fdr", n = length(x$beta.ivw.p))
+  x$beta.egger.p.fdr <- p.adjust(p = x$beta.egger.p, method = "fdr", n = length(x$beta.egger.p))
+  temp.df <<- rbind(temp.df, x)
+}
+
+
+mrbase.methods.2011 <- temp.df
+
+```
+```{r}
+
+write.table(mrbase.methods.2010, 
+            "~/Bioinformatics/Internship/Src/R/cluster_results/final_tables/2010/mrbase_2010_methods.txt", quote = T, row.names = F)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

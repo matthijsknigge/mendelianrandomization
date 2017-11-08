@@ -1,0 +1,110 @@
+```{r}
+source("~/Bioinformatics/Internship/Src/R/cluster_results/MRfunctions.R")
+```
+
+
+```{r}
+# load master table
+c.2010 <- read.table("~/Bioinformatics/Internship/Src/R/cluster_results/final_tables/master.table.calculations.2010.txt", header = T)
+m.2010 <- read.table("~/Bioinformatics/Internship/Src/R/cluster_results/final_tables/master.table.methods.2010.txt", header = T)
+
+c.2011 <- read.table("~/Bioinformatics/Internship/Src/R/cluster_results/final_tables/master.table.calculations.2011.txt", header = T)
+m.2011 <- read.table("~/Bioinformatics/Internship/Src/R/cluster_results/final_tables/master.table.methods.2011.txt", header = T)
+
+```
+
+
+```{r}
+
+
+first_halve <- rbind(c(1,1,1,1,1,2,2,2,2,4,4,4,4,4,4,4,4,4)); first_halve <- first_halve[rep(seq_len(nrow(first_halve)), 6), ]
+second_halve <- rbind(c(1,1,1,1,1,3,3,3,3,4,4,4,4,4,4,4,4,4)); second_halve <- second_halve[rep(seq_len(nrow(second_halve)), 6), ]
+
+
+source("~/Bioinformatics/Internship/Src/R/cluster_results/MRfunctions.R")
+
+# frame for plotting
+layout <- rbind(first_halve, second_halve)
+
+# filtered data
+mm <- m.2011[which(m.2011$beta.egger.p < 0.05), ]
+
+for(phenotype in mm$phenotype){
+  m <- m.2011[which(m.2011$phenotype == phenotype),]
+  c <- c.2011[which(c.2011$phenotype == phenotype),]
+
+  if(sum(is.na(c$beta.iv.se)) > 0){
+    c <- c[!is.na(c$beta.iv.se), ]
+  }
+  
+  p1 <- mr.forest.plot(m, c)
+  p4 <- mr.plot(By = c$beta.outcome, Bx = c$beta.exposure, By.se = c$se.outcome, Bx.se = c$se.exposure, beta.egger = m$beta.egger,
+                       beta.egger.p = m$beta.egger.p, beta.ivw = m$beta.ivw, beta.ivw.p = m$beta.ivw.p, title = "",
+                       outcome.name = "Celiac", exposure.name = m$phenotype, color = "darkblue", beta.iv.se = c$beta.iv.se, chochrans.q = c$chochrans.q, beta.egger.i = m$beta.egger.i,
+                       beta.iv = c$beta.iv, beta.egger.Q = m$beta.egger.Q, beta.egger.p.Q = m$beta.egger.p.Q, beta.egger.i.Q = m$beta.egger.i.Q, beta.ivw.Q = m$beta.ivw.Q, beta.ivw.p.Q = m$beta.ivw.p.Q)
+  
+
+
+  p2 <- mr.funnel.plot(calculation = c, method = m, method.to.use = "beta.ivw")
+  
+  if(!is.na(mm$beta.egger.p)){
+     p3 <- mr.funnel.plot(calculation = c, method = m, method.to.use = "beta.egger")
+  }
+  
+  g <- grid.arrange(p1,p2,p3,p4, layout_matrix = layout,
+                    top = paste0("Celiac 2011 ~ ", phenotype,
+                                  "\n nSNP = ", m$nSNP,
+                                  ", ivw.p = ", signif(m$beta.ivw.p, digits = 3),
+                                  ", egger.p = ", signif(m$beta.egger.p, digits = 3),
+                                  ", ivw.p.Q = ", signif(m$beta.ivw.Q, digits = 3),
+                                  ", egger.p.Q = ", signif(m$beta.egger.p.Q, digits = 3),
+                                  ", egger.p.fdr = ", signif(m$beta.egger.p.fdr, digits = 3)))
+
+
+
+  if(length(c$SNP)<20){
+    h <- length(c$SNP)*0.2121212*3
+  }
+  if(length(c$SNP)<10){
+    h <- length(c$SNP)*0.2121212*6
+  }
+  if(length(c$SNP)>20){
+    h <- length(c$SNP)*0.2121212
+  }
+  ggsave(paste0("2011/", phenotype, ".png"), g, width=20, height=h, dpi=300) 
+  
+  
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
