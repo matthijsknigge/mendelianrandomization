@@ -306,5 +306,6 @@ ggdraw(p)
 ```
 
 
-![hdl~celiac.png](https://bitbucket.org/MatthijsKnigge/mendelianrandomization/src/929fe1a5ebd2bde9eed51e45a24ca09ed56f3ae2/inst/img/hdl~celiac.png)
+
+![picture](inst/img/hdl~celiac.png)
 
