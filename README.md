@@ -305,15 +305,7 @@ p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se, iv = h$iv, 
 ggdraw(p)
 ```
 
-![hdl~celiac](inst/img/hdl~celiac.png)
-
-
-
-\begin{figure}
- \includegraphics[width=300pt, height = 125 pt]{inst/img/hdl~celiac.png}
-\end{figure}
-
-
+![Alt text](inst/img/hdl~celiac.png){height: 10px}
 
 
 
