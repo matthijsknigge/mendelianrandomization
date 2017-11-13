@@ -24,6 +24,14 @@ mr.cochran.Q.test <- function(data, pval){
   # store chochrans.q.p
   cochran.Q.p <<- 0.0
 
+  # before entering loop, find out if it is necessary
+  Q <- 1/data.copy$iv.se * (data.copy$iv - IVW)^2
+  Q.p <<-  pchisq(sum(Q), df = length(Q-1), lower.tail = FALSE)
+  # if q-term does not fall below threshold
+  if(pval < Q.p){
+    return(list(cochran.Q = data$cochran.Q))
+  }
+
   while(pval > cochran.Q.p & length(data.copy$SNP) >= 3){
     # perform chochrans.q
     data.copy$cochran.Q <<- 1/data.copy$iv.se * (data.copy$iv - IVW)^2
