@@ -2,7 +2,7 @@
 
 ---
 
-Mendelian Randomization (MR) is the process that refers to the random segregation and assortment of genes from ancestors to offspring that takes place during gamete formation and gives a method of using genetic variants to make casual inferences regarding the relationship between exposure and outcomes. The basic principle utilized in the MR pipeline, is that if a genetic variant either alters the level of or mimics the biological effects of a exposure that itself alters disease risk, then these genetic variants should be related to disease risk.The goal of MR studies is to provide evidence for or against a causal relationship between a exposure and a disease. Genetic variants are used because these are less susceptible for confounding because of it is subjected to Mendelâ€™s first law, the law of of segregation. These genetic variants segregate independently and randomly from environmental factors, and it can be assumed that genetic variants segregate independently from other traits.
+Mendelian Randomization (MR) is the process that refers to the random segregation and assortment of genes from ancestors to offspring that takes place during gamete formation and gives a method of using genetic variants to make casual inferences regarding the relationship between exposure and outcomes. The basic principle utilized in the MR pipeline, is that if a genetic variant either alters the level of or mimics the biological effects of a exposure that itself alters disease risk, then these genetic variants should be related to disease risk.The goal of MR studies is to provide evidence for or against a causal relationship between a exposure and a disease. Genetic variants are used because these are less susceptible for confounding because of it is subjected to Mendel’s first law, the law of of segregation. These genetic variants segregate independently and randomly from environmental factors, and it can be assumed that genetic variants segregate independently from other traits.
 
 This package provides functionality for the following operations:
 
@@ -60,7 +60,7 @@ devtools::install_bitbucket("matthijsknigge/mendelianRandomization")
 
 ---
 
-The package also contains test data for doing a basic Mendelian Randomization analysis. The first step is to read the data. For this analysis we want to infer causality between an exposure and outcome. In this setup the exposure is Celiac Disease, and the outcome is High-density-lipoproteÃ¯ne (HDL).
+The package also contains test data for doing a basic Mendelian Randomization analysis. The first step is to read the data. For this analysis we want to infer causality between an exposure and outcome. In this setup the exposure is Celiac Disease, and the outcome is High-density-lipoproteïne (HDL).
 
 ```
 # the exposure
@@ -301,10 +301,10 @@ Now it is time for plotting the results. This is done with `mr.plot`.
 p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se, iv = h$iv, iv.se = h$iv.se, ivw = inverse.variance.weighted$ivw,
              egger = egger$egger, egger.i = egger$egger.i, chochran.Q = h$cochran.Q, ivw.Q = inverse.variance.weighted.Q$ivw, egger.Q = egger.Q$egger,
              egger.i.Q = egger.Q$egger.i, egger.p.fdr = egger$egger.p, ivw.p.fdr = inverse.variance.weighted$ivw.p, egger.i.p = egger$egger.i.p,
-             outcome.name = "High-density-lipoproteÃ¯ne (HDL)", exposure.name = "Celiac")
+             outcome.name = "High-density-lipoproteïne (HDL)", exposure.name = "Celiac")
 ggdraw(p)
 ```
 
 
-![hdl~celiac.png](https://bitbucket.org/MatthijsKnigge/mendelianrandomization/src/929fe1a5ebd2bde9eed51e45a24ca09ed56f3ae2/inst/img/hdl~celiac.png)
+![hdl~celiac.png](https://bitbucket.org/MatthijsKnigge/mendelianrandomization/inst/img/hdl~celiac.png)
 
