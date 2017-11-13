@@ -305,7 +305,7 @@ p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se, iv = h$iv, 
 ggdraw(p)
 ```
 
-
+<img src="inst/img/hdl~celiac.png" alt="Drawing" style="width: 200px;"/>
 
 ![picture](inst/img/hdl~celiac.png)
 
