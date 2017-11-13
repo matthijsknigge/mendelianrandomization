@@ -295,7 +295,7 @@ egger.Q
 0.4554338
 ```
 
-Now it is time for plotting the results, with the most fancy plotting function. This is done with `mr.plot`.
+Now it is time for plotting the results. This is done with `mr.plot`.
 
 ```
 p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se, iv = h$iv, iv.se = h$iv.se, ivw = inverse.variance.weighted$ivw,
