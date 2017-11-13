@@ -305,5 +305,6 @@ p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se, iv = h$iv, 
 ggdraw(p)
 ```
 
-![picture](inst/img/hdl~celiac.png)
+
+![hdl~celiac.png](https://bitbucket.org/MatthijsKnigge/mendelianrandomization/src/929fe1a5ebd2bde9eed51e45a24ca09ed56f3ae2/inst/img/hdl~celiac.png)
 
