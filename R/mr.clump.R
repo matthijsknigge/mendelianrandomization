@@ -9,13 +9,14 @@
 #' @param clump_r2 clumping r2 cutoff, default = .1
 #' @param clump_p1 clumping sig level for index SNPs, default = 5*10^-8
 #' @param clump_p2 clumping sig level for index SNPs, default = 5*10^-8
+#' @param SNPs.of.opposite.file vector of SNPs of the opposite file for reference
 #' @keywords clump
 #' @export
 #' @examples
 #' mr.clump(data = data.frame, refdat = '/path/to/refdata/EUR_1000G_phase3_vcf', verbose = TRUE)
 #'
 #' @return data.frame with removed snps
-mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*10^-8, clump_p2 = 5*10^-8, verbose = FALSE){
+mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*10^-8, clump_p2 = 5*10^-8, verbose = FALSE, SNPs.of.opposite.file){
   require(R.utils)
   # check if tempt exists
   if(!dir.exists(paste0(system.file(package="mendelianRandomization", "executables"), "/temp_clump"))){
@@ -41,14 +42,14 @@ mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*
   if(file.exists(paste(fn, ".clumped", sep="")) == TRUE){
     # clump verbose
     if(verbose == TRUE){
-      SNP <- mr.parse.verbose(file = paste(fn, ".clumped", sep=""), SNPs = data$SNP)
+      SNP <- mr.parse.verbose(file = paste(fn, ".clumped", sep=""), SNPs = data$SNP, SNPs.opposite = SNPs.of.opposite.file)
     }
     # clump
     if(verbose == FALSE){
       SNP <- read.table(paste(fn, ".clumped", sep=""), header=T)$SNP
     }
     # remove temp clump files
-    unlink(paste0(fn, "*"))
+    # unlink(paste0(fn, "*"))
     # intersect between data sets
     int <- Reduce(intersect, list(data$SNP, SNP))
     # remove SNPs in LD
@@ -71,7 +72,7 @@ mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*
 #' @param SNPs list of snps to compare with proxy determination
 #'
 #' @return list of SNPs
-mr.parse.verbose <- function(file, SNPs){
+mr.parse.verbose <- function(file, SNPs, SNPs.opposite){
   snp <<- c()
   previous.line <<- ""
   track.snp <<- setNames(data.frame(matrix(ncol = 2, nrow = 0)), c("SNP", "r_2"))
@@ -93,7 +94,9 @@ mr.parse.verbose <- function(file, SNPs){
         x <- x[-which(x == "")]
         #------------------- remove trailing spaces and characters---------------
       }
-      print(x)
+      # print line
+      # print(x)
+      # get current line
       current.line <<- x
       if(grepl("rs", current.line[1]) == TRUE & previous.line[1] == "SNP"){
         snp <<- c(snp, current.line[1])
@@ -108,9 +111,13 @@ mr.parse.verbose <- function(file, SNPs){
         snp <<- snp[-which(snp == previous.line[1])]
       }
 
-      if(grepl("rs", previous.line[1]) == TRUE & grepl("rs", current.line[1]) == TRUE){
+      if(previous.line[1] == "KB" & grepl("rs", current.line[1]) == TRUE){
+        track.snp <<- rbind(track.snp, data.frame("SNP" = current.line[1],
+                                                  "r_2" = as.numeric(current.line[3])))
+      }
 
-        if(current.line[1] %in% SNPs == TRUE){
+      if(grepl("rs", current.line[1]) == TRUE & grepl("rs", previous.line[1]) == TRUE){
+        if(current.line[1] %in% SNPs == TRUE & current.line[1] %in% SNPs.opposite == TRUE){
           if(as.numeric(current.line[3]) > 0.8){
             # message(paste0("--------------------------------------", current.line[1], " ", current.line[3]))
 
@@ -123,7 +130,7 @@ mr.parse.verbose <- function(file, SNPs){
 
       if(grepl("rs", previous.line[1]) == TRUE & current.line[1] == "SNP"){
         if(length(track.snp$SNP) > 0){
-          message(paste0("--------------------------------------", track.snp[which.max(track.snp$r_2),]$SNP, " ", track.snp[which.max(track.snp$r_2),]$r_2))
+          # message(paste0("--------------------------------------", track.snp[which.max(track.snp$r_2),]$SNP, " ", track.snp[which.max(track.snp$r_2),]$r_2))
           snp <<- c(snp, as.character(track.snp[which.max(track.snp$r_2),]$SNP))
           track.snp$SNP <<- NULL; track.snp$r_2 <<- NULL
         }

@@ -5,7 +5,7 @@
 \title{Perform clumping}
 \usage{
 mr.clump(data, refdat, clump_kb = 1000, clump_r2 = 0.1, clump_p1 = 5 *
-  10^-8, clump_p2 = 5 * 10^-8, verbose = FALSE)
+  10^-8, clump_p2 = 5 * 10^-8, verbose = FALSE, SNPs.of.opposite.file)
 }
 \arguments{
 \item{data}{data.frame to be clumped. Must contain columns: pval, SNP}
@@ -21,6 +21,8 @@ mr.clump(data, refdat, clump_kb = 1000, clump_r2 = 0.1, clump_p1 = 5 *
 \item{clump_p2}{clumping sig level for index SNPs, default = 5*10^-8}
 
 \item{verbose}{boolean TRUE for clumping and using proxy SNP, FALSE for just removing SNPs in LD. Default: False}
+
+\item{SNPs.of.opposite.file}{vector of SNPs of the opposite file for reference}
 }
 \value{
 data.frame with removed snps
