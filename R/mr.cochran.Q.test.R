@@ -11,6 +11,15 @@
 #'
 #' @return vector containing  chochran's Q which says if the SNPs is used or not in the method.
 mr.cochran.Q.test <- function(data, pval){
+  # no data
+  if(is.data.frame(h) && nrow(h) == 0){
+    return(NULL)
+  }
+  # if not enough data
+  if(length(data$SNP) < 3){
+    data$cochran.Q <- 0
+    return(list(cochran.Q = data$cochran.Q))
+  }
   # add slot
   data$cochran.Q <- 0
   # deep copy of ivw
