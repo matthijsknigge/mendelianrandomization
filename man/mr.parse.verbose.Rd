@@ -4,7 +4,7 @@
 \alias{mr.parse.verbose}
 \title{Parse verbose, get proxy snps}
 \usage{
-mr.parse.verbose(file, SNPs, SNPs.opposite)
+mr.parse.verbose(file, SNPs.list.1, SNPs.list.2)
 }
 \arguments{
 \item{file}{file conatianing snps and pval to clump}

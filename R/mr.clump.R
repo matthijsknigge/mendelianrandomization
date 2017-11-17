@@ -28,7 +28,7 @@ mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*
   tempdir <-   paste0(system.file(package="mendelianRandomization", "executables"), "/temp_clump")
   # Make textfile
   fn <- tempfile(tmpdir = tempdir)
-  write.table(data.frame(SNP=data$SNP, P=data$pval), file=fn, row=F, col=T, qu=F)
+  write.table(data.frame(SNP=data$SNP, P=data$pval), file=fn, row.names=F, col.names=T, quote=F)
   # call plink
   if(verbose == TRUE){
     fun2 <- paste0(plink_bin, "./plink", " --bfile ", refdat, " --clump ", fn, " --clump-p1 ", clump_p1, " --clump-p2 ", clump_p2, " --clump-r2 ", clump_r2, " --clump-kb ", clump_kb, " --clump-verbose", " --out ", fn)
@@ -42,20 +42,18 @@ mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*
   if(file.exists(paste(fn, ".clumped", sep="")) == TRUE){
     # clump verbose
     if(verbose == TRUE){
-      SNP <- mr.parse.verbose(file = paste(fn, ".clumped", sep=""), SNPs = data$SNP, SNPs.opposite = SNPs.of.opposite.file)
+      SNP <- mr.parse.verbose(file = paste(fn, ".clumped", sep=""), SNPs.list.1 = data$SNP, SNPs.list.2 = SNPs.of.opposite.file)
     }
     # clump
     if(verbose == FALSE){
       SNP <- read.table(paste(fn, ".clumped", sep=""), header=T)$SNP
     }
     # remove temp clump files
-    # unlink(paste0(fn, "*"))
-    # intersect between data sets
-    int <- Reduce(intersect, list(data$SNP, SNP))
+    unlink(paste0(fn, "*"))
     # remove SNPs in LD
-    data <- data[data$SNP %in% int, ]
+    data <- data[data$SNP %in% SNP, ]
     # clear work space
-    rm(count, envir = .GlobalEnv); rm(track.snp, envir = .GlobalEnv); rm(current.line, envir = .GlobalEnv); rm(previous.line, envir = .GlobalEnv); rm(previous.RSQ, envir = .GlobalEnv); rm(proxy.added, envir = .GlobalEnv); rm(RSQ, envir = .GlobalEnv); rm(snp, envir = .GlobalEnv); rm(snp.proxy.added, envir = .GlobalEnv)
+    rm(snp.list, envir = .GlobalEnv); rm(proxy.snp, envir = .GlobalEnv)
     # return result
     return(data)
   } else {
@@ -72,74 +70,69 @@ mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*
 #' @param SNPs list of snps to compare with proxy determination
 #'
 #' @return list of SNPs
-mr.parse.verbose <- function(file, SNPs, SNPs.opposite){
-  snp <<- c()
-  previous.line <<- ""
-  track.snp <<- setNames(data.frame(matrix(ncol = 2, nrow = 0)), c("SNP", "r_2"))
-  RSQ <<- 0
-  count <<- 0
-  snp.proxy.added <<- ""
-  previous.RSQ <<- 0
-  proxy.added <<- FALSE
-  clump = readLines(file)
-  for (i in 1:length(clump)){
-    # add to count
-    count <<- count + 1
-    #------------------- remove trailing spaces and characters---------------
-    clump[i] <- substr(clump[i], 70, nchar(clump[i]))
-    if (clump[i] != ""){
-      x <- unlist(strsplit(clump[i], "\\s+"))
-      ws <- which(x == "")
-      if(length(ws) != 0){
-        x <- x[-which(x == "")]
-        #------------------- remove trailing spaces and characters---------------
-      }
-      # print line
-      # print(x)
-      # get current line
-      current.line <<- x
-      if(grepl("rs", current.line[1]) == TRUE & previous.line[1] == "SNP"){
-        snp <<- c(snp, current.line[1])
-      }
-      if(i == length(clump)){
-        if(grepl("rs", current.line[1]) == TRUE & previous.line[1] == "SNP"){
-          snp <<- c(snp, current.line[1])
-        }
+mr.parse.verbose <- function(file, SNPs.list.1, SNPs.list.2){
+  require(stringr); require(readr)
+  # read entire file as single character
+  file <- read_file(file)
+  # pattern for finding chunks
+  pattern <- regex("(SNP)([.\\S\\s]*?)(--+)"); message("chunking for pattern.....")
+  # split verbose file in chunks: (SNP) [any character between] (--+)
+  matches <- str_extract_all(string = file, pattern = pattern, simplify = TRUE)
+  # store SNPs found
+  snp.list <<- c()
+  # store proxy SNPs found
+  proxy.snp <<- data.frame()
+  # for every chunk found
+  message("evaluating chunks.....")
+  for(match in matches){
+    # check if the chunk is a proxy chunk
+    if(grepl("INDEX", match) == TRUE){
+      # pattern for proxy chunk
+      pattern <- regex("(KB)([.\\S\\s]*?)(--+)")
+      # get all proxy SNPs and there RSQ
+      proxy.chunk <- str_extract_all(string = match, pattern = pattern, simplify = TRUE)
+      # pattern for SNP chunk
+      pattern <- regex("(rs\\d*)(.*)")
+      # extract SNP and RSQ from proxy chunk
+      snp.chunk <- str_extract_all(string = proxy.chunk, pattern = pattern, simplify = TRUE)
+      # split snp chunk into frame
+      for(snp in snp.chunk){
+        SNPs <- unlist(strsplit(snp, "\\s+"))
+        proxy.snp <<- rbind(proxy.snp, data.frame("SNP" = SNPs[1], "RSQ" = as.numeric(SNPs[3])))
       }
 
-      if(current.line[1] == "KB" & grepl("rs", previous.line[1]) == TRUE){
-        snp <<- snp[-which(snp == previous.line[1])]
+      # order proxy SNP data.frame
+      proxy.snp <<- proxy.snp[order(proxy.snp$RSQ, decreasing = T), ]
+      # remove all below 0.8
+      if(length(which(proxy.snp$RSQ < .8)) > 0){
+        proxy.snp <<- proxy.snp[-which(proxy.snp$RSQ < .8), ]
       }
-
-      if(previous.line[1] == "KB" & grepl("rs", current.line[1]) == TRUE){
-        track.snp <<- rbind(track.snp, data.frame("SNP" = current.line[1],
-                                                  "r_2" = as.numeric(current.line[3])))
-      }
-
-      if(grepl("rs", current.line[1]) == TRUE & grepl("rs", previous.line[1]) == TRUE){
-        if(current.line[1] %in% SNPs == TRUE & current.line[1] %in% SNPs.opposite == TRUE){
-          if(as.numeric(current.line[3]) > 0.8){
-            # message(paste0("--------------------------------------", current.line[1], " ", current.line[3]))
-
-            # add to frame
-            track.snp <<- rbind(track.snp, data.frame("SNP" = current.line[1],
-                                                      "r_2" = as.numeric(current.line[3])))
-          }
-        }
-      }
-
-      if(grepl("rs", previous.line[1]) == TRUE & current.line[1] == "SNP"){
-        if(length(track.snp$SNP) > 0){
-          # message(paste0("--------------------------------------", track.snp[which.max(track.snp$r_2),]$SNP, " ", track.snp[which.max(track.snp$r_2),]$r_2))
-          snp <<- c(snp, as.character(track.snp[which.max(track.snp$r_2),]$SNP))
-          track.snp$SNP <<- NULL; track.snp$r_2 <<- NULL
-        }
-      }
-      if(grepl("rs", previous.line[1]) == TRUE & current.line[1] == "KB"){
-
-      }
-      previous.line <<- x
+      # determine wich SNPs to use as proxy
+      int <- Reduce(intersect, list(SNPs.list.1, SNPs.list.2, proxy.snp$SNP))
+      # apply overlap
+      proxy.snp <<- proxy.snp[proxy.snp$SNP %in% int, ]
+      # get max RSQ
+      snp.list <<- c(snp.list, as.character(proxy.snp[which.max(proxy.snp$RSQ), ]$SNP))
+      # empty the frame for next iteration
+      proxy.snp <<- data.frame()
+    }
+    # if it is a chunk without proxy
+    if(grepl("INDEX", match) == FALSE){
+      # pattern for SNP
+      pattern <- regex("(rs\\d*)")
+      # get the SNP
+      snp <- str_extract_all(string = match, pattern = pattern, simplify = TRUE)
+      # match SNP with outcome and exposure
+      int <- Reduce(intersect, list(SNPs.list.1, SNPs.list.2, snp))
+      # apply overlap
+      snp.list <<- c(snp.list, as.character(int))
     }
   }
-  return(snp)
+  message("Done clumping verbose")
+  # report
+  for(snp.found in snp.list){
+    message(paste0("found ", snp.found))
+  }
+  # return clumped verbose data
+  return(snp.list)
 }
