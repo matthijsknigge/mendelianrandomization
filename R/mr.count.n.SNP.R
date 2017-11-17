@@ -10,7 +10,7 @@
 #' @keywords p adjust
 #' @export
 #' @examples
-#' mr.adjust.p()
+#' mr.count.n.SNP()
 #'
 #' @return Adjusted data frame with number of SNPs added to summary table
 #'
