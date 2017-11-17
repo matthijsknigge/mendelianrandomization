@@ -24,12 +24,12 @@ mr.pre.process <- function(B, B.se, pval, effect_allele, other_allele, SNP){
     data <- data[-which(is.na(data$beta)), ]
   }
   # delete exposures without ellelic information
-  if(length(which(is.na(data$effect_allele)) > 0)){
-    data <- data[-which(is.na(data$effect_allele)), ]
+  if(length(which(data$effect_allele == "") > 0)){
+    data <- data[-which(data$effect_allele == ""), ]
   }
 
-  if(length(which(is.na(data$other_allele)) > 0)){
-    data <- data[-which(is.na(data$other_allele)), ]
+  if(length(which(data$other_allele == "") > 0)){
+    data <- data[-which(data$other_allele == ""), ]
   }
 
   # remove duplicates

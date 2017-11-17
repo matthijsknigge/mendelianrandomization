@@ -23,7 +23,7 @@ Adjusted data frame with number of SNPs added to summary table
 Count number of SNPs for methods
 }
 \examples{
-mr.adjust.p()
+mr.count.n.SNP()
 
 }
 \author{
