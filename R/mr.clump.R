@@ -100,7 +100,6 @@ mr.parse.verbose <- function(file, SNPs.list.1, SNPs.list.2){
         SNPs <- unlist(strsplit(snp, "\\s+"))
         proxy.snp <<- rbind(proxy.snp, data.frame("SNP" = SNPs[1], "RSQ" = as.numeric(SNPs[3])))
       }
-
       # order proxy SNP data.frame
       proxy.snp <<- proxy.snp[order(proxy.snp$RSQ, decreasing = T), ]
       # remove all below 0.8
