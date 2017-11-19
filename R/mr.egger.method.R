@@ -20,6 +20,10 @@
 #'         egger.i.se: Standard error of intercept
 #'         egger.i.p: p-value of intercept
 mr.egger.method <- function(By, Bx, By.se, Bx.se){
+  # test vector
+  if(length(By) == 0){
+    return(list(egger = NA, egger.se = NA, egger.p = NA, egger.i = NA, egger.i.se = NA, egger.i.p = NA))
+  }
 
   # if not enough data
   if(length(By) < 3){
@@ -44,6 +48,7 @@ mr.egger.method <- function(By, Bx, By.se, Bx.se){
   egger.i.se <- summary(lm(By ~ Bx, weights = By.se^-2))$coef[1,2] / min(summary(lm(By ~ Bx, weights = By.se^-2))$sigma, 1)
   # egger.i.p
   egger.i.p <- 2 * pt(abs(egger.i / egger.i.se), df = length(Bx) - 2, lower.tail = F)
+  # return egger
   return(list(egger = egger, egger.se = egger.se, egger.p = egger.p, egger.i = egger.i, egger.i.se = egger.i.se, egger.i.p = egger.i.p))
 
 }
