@@ -16,7 +16,7 @@
 #' @return cleaned data
 mr.pre.process <- function(B, B.se, pval, effect_allele, other_allele, SNP){
   # bind to frame
-  data <- data.frame(SNP = SNP, beta = B, se = B.se, effect_allele = effect_allele, other_allele = other_allele, pval = pval)
+  data <- data.frame(SNP = SNP, beta = B, se = B.se, effect_allele = effect_allele, other_allele = other_allele, pval = pval, stringsAsFactors=FALSE)
   # filter on p-value
   data <- data[which(data$pval < 5*10^-8),]
   # delete exposures without effectsize or OR
@@ -24,14 +24,19 @@ mr.pre.process <- function(B, B.se, pval, effect_allele, other_allele, SNP){
     data <- data[-which(is.na(data$beta)), ]
   }
   # delete exposures without ellelic information
-  if(length(which(data$effect_allele == "") > 0)){
+  if(length(which(data$effect_allele == "")) > 0){
     data <- data[-which(data$effect_allele == ""), ]
   }
-
-  if(length(which(data$other_allele == "") > 0)){
+  if(length(which(data$other_allele == "")) > 0){
     data <- data[-which(data$other_allele == ""), ]
   }
-
+  # delete exposures without ellelic information
+  if(length(which(is.na(data$effect_allele))) > 0){
+    data <- data[-which(is.na(data$effect_allele)), ]
+  }
+  if(length(which(is.na(data$other_allele))) > 0){
+    data <- data[-which(is.na(data$other_allele)), ]
+  }
   # remove duplicates
   data <- data[!duplicated(data$SNP),]
   # determine alleles to flip

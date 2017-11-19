@@ -22,8 +22,8 @@
 #' @return harmonized data
 mr.harmonize <- function(By, Bx, By.se, Bx.se, outcome.pval, exposure.pval, outcome.effect_allele, exposure.effect_allele, exposure.other_allele, outcome.SNP, exposure.SNP){
   # assign data slots
-  o <- data.frame(beta = By, se = By.se, pval = outcome.pval, effect_allele = outcome.effect_allele, SNP = outcome.SNP)
-  e <- data.frame(beta = Bx, se = Bx.se, pval = exposure.pval, effect_allele = exposure.effect_allele, other_allele = exposure.other_allele, SNP = exposure.SNP)
+  o <- data.frame(beta = By, se = By.se, pval = outcome.pval, effect_allele = outcome.effect_allele, SNP = outcome.SNP, stringsAsFactors=FALSE)
+  e <- data.frame(beta = Bx, se = Bx.se, pval = exposure.pval, effect_allele = exposure.effect_allele, other_allele = exposure.other_allele, SNP = exposure.SNP, stringsAsFactors=FALSE)
   # delete exposures without effectsize or OR
   if(length(which(is.na(e$beta)) > 0)){
     e <- e[-which(is.na(e$beta)), ]
@@ -39,6 +39,8 @@ mr.harmonize <- function(By, Bx, By.se, Bx.se, outcome.pval, exposure.pval, outc
   # order data
   o <- o[order(o$SNP), ]; e <- e[order(e$SNP), ];
   # always assume that the alignment is incorrect
+  print(length(o$SNP))
+  print(length(e$SNP))
   o[which(as.character(o$effect_allele) != as.character(e$effect_allele)), ]$beta <-  o[which(as.character(o$effect_allele) != as.character(e$effect_allele)), ]$beta * -1
   # order on snps
   o <- o[order(o$SNP), ]; e <- e[order(e$SNP), ];
