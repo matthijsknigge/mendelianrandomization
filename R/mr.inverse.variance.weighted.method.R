@@ -16,18 +16,16 @@
 #'         ivw.se: standard error
 #'         ivw.p: p-value
 mr.inverse.variance.weighted.method <- function(By, Bx, By.se, Bx.se){
-  # test vector
+  # test if vector is empty
   if(length(By) == 0){
     return(list(ivw = NA, ivw.se = NA, ivw.p = NA))
   }
-
   # ivw
   ivw     <- sum(By*Bx*By.se^-2)/sum(Bx^2*By.se^-2)
   # ivw.se
   ivw.se  <- 1/sqrt(sum(Bx^2*By.se^-2))
   # ivw.p
   ivw.p   <- pchisq((ivw / ivw.se)^2, 1, lower.tail = FALSE)
-
   # return ivw
   return(list(ivw = ivw, ivw.se = ivw.se, ivw.p = ivw.p))
 }
