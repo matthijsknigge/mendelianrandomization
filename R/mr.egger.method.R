@@ -20,21 +20,18 @@
 #'         egger.i.se: Standard error of intercept
 #'         egger.i.p: p-value of intercept
 mr.egger.method <- function(By, Bx, By.se, Bx.se){
-  # test vector
+  # test if vector is empty
   if(length(By) == 0){
     return(list(egger = NA, egger.se = NA, egger.p = NA, egger.i = NA, egger.i.se = NA, egger.i.p = NA))
   }
-
   # if not enough data
   if(length(By) < 3){
     return(list(egger = NA, egger.se = NA, egger.p = NA, egger.i = NA, egger.i.se = NA, egger.i.p = NA))
   }
-
   # if slope can not be calculated
   if (nrow(summary(lm(By ~ Bx, weights = By.se^-2))$coef) <= 1){
     return(list(egger = NA, egger.se = NA, egger.p = NA, egger.i = NA, egger.i.se = NA, egger.i.p = NA))
   }
-
   # egger
   egger <- summary(lm(By~Bx, weights=By.se^-2))$coef[2,1]
   # egger.se
