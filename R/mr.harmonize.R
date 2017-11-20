@@ -39,8 +39,6 @@ mr.harmonize <- function(By, Bx, By.se, Bx.se, outcome.pval, exposure.pval, outc
   # order data
   o <- o[order(o$SNP), ]; e <- e[order(e$SNP), ];
   # always assume that the alignment is incorrect
-  print(length(o$SNP))
-  print(length(e$SNP))
   o[which(as.character(o$effect_allele) != as.character(e$effect_allele)), ]$beta <-  o[which(as.character(o$effect_allele) != as.character(e$effect_allele)), ]$beta * -1
   # order on snps
   o <- o[order(o$SNP), ]; e <- e[order(e$SNP), ];
