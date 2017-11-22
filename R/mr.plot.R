@@ -22,7 +22,10 @@
 #' @param show.stats boolean show statistics summary. Default is TRUE.
 #' @param egger.p.fdr value indicating slope significant different from zero after FDR correction.
 #' @param ivw.p.fdr value indicating slope significant different from zero after FDR correction.
-#' @param egger.i.p value indicating intercept significant different from zero after FDR correction.
+#' @param egger.i.p value indicating intercept significant different from zero.
+#' @param egger.Q.p.fdr value indicating significance of slope from egger after Q pruning
+#' @param ivw.Q.p.fdr value indicating significance of estimate ivw after Q pruning
+#' @param egger.Q.i.p value indicating intercept significant different from zero after Q correction.
 #'
 #' @keywords mr.plot
 #' @export
@@ -32,7 +35,8 @@
 #' @return plot object
 mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, egger.i = NULL, chochran.Q = NULL,
                     ivw.Q = NULL, egger.Q = NULL, egger.i.Q = NULL, egger.p.fdr = NULL, ivw.p.fdr = NULL, egger.i.p = NULL,
-                    outcome.name, exposure.name, legend = TRUE, position = "bottom", show.stats = TRUE){
+                    outcome.name, exposure.name, legend = TRUE, position = "bottom", show.stats = TRUE,
+                    egger.Q.p.fdr = NULL, ivw.Q.p.fdr = NULL, egger.Q.i.p = NULL){
   require(ggplot2); require("RColorBrewer"); require(latex2exp); require(cowplot); require(gridExtra)
   # check if Chochran's Q is used on data set
   if(sum(chochran.Q) == 0){
@@ -113,12 +117,21 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
   # show stats
   tt3 <- ttheme_minimal(
     core=list(bg_params = list(fill = blues9[1:4], col=NA),
-              fg_params=list(fontface=3)),
+              fg_params=list(fontface=1)),
     colhead=list(fg_params=list(col="navyblue", fontface=4L)),
     rowhead=list(fg_params=list(col="orange", fontface=3L)))
 
   if(show.stats == TRUE){
-    mytable <- cbind(c("nSNP"," Egger FDR","IVW FDR","Horizontal pleiotropy"), c(length(By) , signif(egger.p.fdr, digits = 3), signif(ivw.p.fdr, digits = 3), signif(egger.i.p, digits = 3)))
+    if(is.null(chochran.Q)){
+      mytable <- cbind(c("nSNP"," Egger FDR","IVW FDR","Horizontal pleiotropy"), c(length(By) , signif(egger.p.fdr, digits = 3), signif(ivw.p.fdr, digits = 3), signif(egger.i.p, digits = 3)))
+    }
+    if(!is.null(chochran.Q)){
+      mytable <- cbind(c("", "nSNP"," Egger FDR","IVW FDR","Horizontal pleiotropy"),
+                       c("before Q", length(By) , signif(egger.p.fdr, digits = 3), signif(ivw.p.fdr, digits = 3), signif(egger.i.p, digits = 3)),
+                       c("after Q", sum(chochran.Q) , signif(egger.Q.p.fdr, digits = 3), signif(ivw.Q.p.fdr, digits = 3), signif(egger.Q.i.p, digits = 3)))
+    }
+
+
     p <- p + annotation_custom(tableGrob(mytable, theme = tt3),
                                xmin = layer_scales(p)$x$range$range[2]*.8,
                                xmax = layer_scales(p)$x$range$range[2]*.8,
