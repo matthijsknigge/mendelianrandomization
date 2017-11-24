@@ -15,8 +15,8 @@ The Mendelian Framework is quite straight forward, in order test if there is a c
 
 The first assumption can be verified by examining the strength of the association of the genetic variant with the exposure. This can be met by for selecting genome-wide significance on genetic variants. For the second assumption examine the possible relationship between a genetic variant and a measured confounder. For example pleiotropy, which is tested for by the MR-egger method. This method will be explained in the next slide.And for the third assumption, this is very problematic because it is very difficult to prove that the genetic variant is associated with the outcome through the exposure instead of through some other biological pathway. See figure 2.
 
-test                           | qwddddddddddd
--------------------------------|------------------------------------
+Figure 1: An overview of the Mendelian Randomization approach                           | Figure 2: An overview of the Mendelian Randomization framework
+:-------------------------------:|:------------------------------------:
 ![alt-text-1](inst/img/MR.png) | ![alt-text-2](inst/img/MRframe.png)
 
 This package provides functionality for the following operations:
