@@ -56,7 +56,7 @@ mr.cochran.Q.test <- function(data, pval){
   }
   # if not able to perform chochrans.q
   if(length(data.copy$SNP) < 3){
-    return(data$cochran.Q)
+    return(list(cochran.Q = data$cochran.Q))
   }
   # intercept between and determine which snps did not participate in the calculation
   int <- Reduce(intersect, list(data.copy$SNP, data$SNP))
