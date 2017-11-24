@@ -36,6 +36,8 @@ mr.harmonize <- function(By, Bx, By.se, Bx.se, outcome.pval, exposure.pval, outc
   int <- Reduce(intersect, list(o$SNP, e$SNP))
   # intersect between data sets
   e <- e[e$SNP %in% int, ]; o <- o[o$SNP %in% int, ]
+  # remove duplicates
+  e <- e[!duplicated(e$SNP),]; o <- o[!duplicated(o$SNP),]
   # order data
   o <- o[order(o$SNP), ]; e <- e[order(e$SNP), ];
   # always assume that the alignment is incorrect
@@ -50,8 +52,6 @@ mr.harmonize <- function(By, Bx, By.se, Bx.se, outcome.pval, exposure.pval, outc
   remove.snp <- Reduce(intersect, list(remove.effect.allele.snp, remove.other.allele.snp))
   # adjust data.frame
   e <- e[!e$SNP %in% remove.snp, ]; o <- o[!o$SNP %in% remove.snp, ]
-  # remove duplicates
-  e <- e[!duplicated(e$SNP),]; o <- o[!duplicated(o$SNP),]
   # assign return data slots
   data <- data.frame(SNP = o$SNP, By = o$beta, Bx = e$beta, By.se = o$se, Bx.se = e$se, pval = e$pval, effect_allele = e$effect_allele, other_allele = e$other_allele)
   return(data)
