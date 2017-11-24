@@ -8,7 +8,8 @@ mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
   egger.i = NULL, chochran.Q = NULL, ivw.Q = NULL, egger.Q = NULL,
   egger.i.Q = NULL, egger.p.fdr = NULL, ivw.p.fdr = NULL,
   egger.i.p = NULL, outcome.name, exposure.name, legend = TRUE,
-  position = "bottom", show.stats = TRUE)
+  position = "bottom", show.stats = TRUE, egger.Q.p.fdr = NULL,
+  ivw.Q.p.fdr = NULL, egger.Q.i.p = NULL)
 }
 \arguments{
 \item{By}{Vector of genetic effects of outcome}
@@ -41,7 +42,7 @@ mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
 
 \item{ivw.p.fdr}{value indicating slope significant different from zero after FDR correction.}
 
-\item{egger.i.p}{value indicating intercept significant different from zero after FDR correction.}
+\item{egger.i.p}{value indicating intercept significant different from zero.}
 
 \item{outcome.name}{string of the outcome name. Default is NULL.}
 
@@ -52,6 +53,12 @@ mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
 \item{position}{position of legend. Default bottom.}
 
 \item{show.stats}{boolean show statistics summary. Default is TRUE.}
+
+\item{egger.Q.p.fdr}{value indicating significance of slope from egger after Q pruning}
+
+\item{ivw.Q.p.fdr}{value indicating significance of estimate ivw after Q pruning}
+
+\item{egger.Q.i.p}{value indicating intercept significant different from zero after Q correction.}
 }
 \value{
 plot object
