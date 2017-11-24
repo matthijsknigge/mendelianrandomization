@@ -90,11 +90,11 @@ This package needs R version 3.2.0 or greater.
 The package also contains test data for doing a basic Mendelian Randomization analysis. The first step is to read the data. For this analysis we want to infer causality between an exposure and outcome. In this setup the exposure is Inflammatory bowel disease, and the outcome is Celiac Disease.
 
 ```
-# the exposure
+# the outcome
 data("celiac")
 outcome <- celiac
 
-# the outcome
+# the exposure
 data("Inflammatory.bowel.disease")
 exposure  <- Inflammatory.bowel.disease
 ```
@@ -316,7 +316,7 @@ egger.Q
 
 For a brief overview what operations took place, see figure 3 and 4, which gives an overview of all the operations that took place and in which order. The first step in the Mendelian Randomization approach is the pre-processing of the exposure; selecting for genome-wide significance, removal of genetic variants without effect size, and the removal of the ambiguous alleles. And after that the negative signs of the genetic variants in the exposure are flipped. Then the data set is clumped and proxied for LD, because we do not want our data set to suffer from pleiotropic effects which can be reintroduced by linkage disequilibrium. Then the outcome is aligned on the exposure and the intersect between both data sets is taken. After these steps the causality between exposure and outcome can be estimated and tested with the given methods in this packages.
 
-Figure 1: An overview of the Mendelian Randomization pipline part 1                           | Figure 2: An overview of the Mendelian Randomization pipline part 2
+Figure 3: An overview of the Mendelian Randomization pipline part 1                           | Figure 4: An overview of the Mendelian Randomization pipline part 2
 :-------------------------------:|:------------------------------------:
 ![alt-text-1](inst/img/pipeline2.png) | ![alt-text-2](inst/img/pipeline1.png)
 
