@@ -318,7 +318,7 @@ For a brief overview what operations took place, see figure 3 and 4, which gives
 
 Figure 1: An overview of the Mendelian Randomization pipline part 1                           | Figure 2: An overview of the Mendelian Randomization pipline part 2
 :-------------------------------:|:------------------------------------:
-![alt-text-1](inst/img/pipeline1.png) | ![alt-text-2](inst/img/pipeline2.png)
+![alt-text-1](inst/img/pipeline2.png) | ![alt-text-2](inst/img/pipeline1.png)
 
 
 After all the data processing and calculating the Mendelian Randomization Analysis can be plotted. This is done with `mr.plot`.
