@@ -105,7 +105,7 @@ head(outcome)
 ```
 Here we se a column with SNP identifiers, the effect allele, the effectsize, the pvalue, and the standard deviation.
 |SNP        |effect_allele |       Z_OR|         P|        se|
-|:----------|:-------------|----------:|---------:|---------:|
+|----------|-------------|----------|---------|---------|
 |rs61733845 |T             |  0.0353671| 0.4249000| 0.0443226|
 |rs1320571  |A             |  0.0188218| 0.6590000| 0.0426513|
 |rs9729550  |A             |  0.1004835| 0.0000025| 0.0213295|
