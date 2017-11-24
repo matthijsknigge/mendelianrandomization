@@ -104,15 +104,15 @@ Lets check out the data.
 head(outcome)
 ```
 Here we se a column with SNP identifiers, the effect allele, the effectsize, the pvalue, and the standard deviation.
-|SNP        |effect_allele |       Z_OR|         P|        se|
-|----------|-------------|----------|---------|---------|
+
+|SNP        |effect_allele |Z_OR       |P         |se        |
+|-----------|--------------|-----------|----------|----------|
 |rs61733845 |T             |  0.0353671| 0.4249000| 0.0443226|
 |rs1320571  |A             |  0.0188218| 0.6590000| 0.0426513|
 |rs9729550  |A             |  0.1004835| 0.0000025| 0.0213295|
 |rs1815606  |G             |  0.0677437| 0.0007151| 0.0200204|
 |rs7515488  |T             | -0.1028082| 0.0001195| 0.0267232|
 |rs11260562 |A             | -0.0393647| 0.3344000| 0.0407802|
-
 
 
 
