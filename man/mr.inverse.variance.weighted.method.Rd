@@ -4,7 +4,7 @@
 \alias{mr.inverse.variance.weighted.method}
 \title{Perform inverse variance weighted method}
 \usage{
-mr.inverse.variance.weighted.method(By, Bx, By.se, Bx.se)
+mr.inverse.variance.weighted.method(By, Bx, By.se, Bx.se, subset = NULL)
 }
 \arguments{
 \item{By}{Vector of genetic effects of outcome}
@@ -14,6 +14,8 @@ mr.inverse.variance.weighted.method(By, Bx, By.se, Bx.se)
 \item{By.se}{Standard errors of genetic effects on outcome}
 
 \item{Bx.se}{Standard errors of genetic effects on exposure}
+
+\item{subset}{vector containing 1-0 indicating to use it in the calculation or not. Default is NULL.}
 }
 \value{
 List with the following elements:
