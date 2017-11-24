@@ -88,7 +88,7 @@ outcome  <- data("hdl")
 
 The package also contains test data for doing a basic Mendelian Randomization analysis. The first step is to read the data. For this analysis we want to infer causality between an exposure and outcome. In this setup the exposure is Inflammatory bowel disease, and the outcome is Celiac Disease.
 
-```{r}
+```
 # the exposure
 data("celiac")
 outcome <- celiac
@@ -115,5 +115,16 @@ Here we se a column with SNP identifiers, the effect allele, the effectsize, the
 |rs11260562 |A             | -0.0393647| 0.3344000| 0.0407802|
 
 
+```
+head(exposure)
+```
+Here there is a column with the SNP identifiers, effect_allele, the other_allele, the effectsize, the standard deviation of the genetic effect, and the p value.
 
-
+|SNP        |effect_allele |other_allele |      beta|        se|  pval|
+|------|-----------|--------------|-------------|----------|----------|------|
+|13665 |rs1003342  |NA            |NA           |        NA|        NA| 0e+00|
+|13666 |rs10051722 |A             |NA           | 0.0616269| 0.0107204| 0e+00|
+|13667 |rs10061469 |A             |G            | 0.0518248| 0.0105946| 1e-06|
+|13668 |rs10065637 |G             |A            | 0.0686809| 0.0128937| 1e-07|
+|13669 |rs10142466 |NA            |NA           |        NA|        NA| 0e+00|
+|13671 |rs10486483 |A             |G            | 0.0602257| 0.0102041| 2e-07|
