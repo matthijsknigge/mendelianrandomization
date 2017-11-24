@@ -4,9 +4,7 @@
 
 Mendelian Randomization (MR) is the process that refers to the random segregation and assortment of genes from ancestors to offspring that takes place during gamete formation and gives a method of using genetic variants to make casual inferences regarding the relationship between exposure and outcomes. The basic principle utilized in the MR pipeline, is that if a genetic variant either alters the level of or mimics the biological effects of a exposure that itself alters disease risk, then these genetic variants should be related to disease risk.The goal of MR studies is to provide evidence for or against a causal relationship between a exposure and a disease. Genetic variants are used because these are less susceptible for confounding because of it is subjected to Mendel’s first law, the law of of segregation. These genetic variants segregate independently and randomly from environmental factors, and it can be assumed that genetic variants segregate independently from other traits.
 
-                               |
-:-------------------------------:|:-----------------------------------:
-![alt-text-1](inst/img/MR.png) | ![alt-text-2](inst/img/MRframe.png)
+![alt-text-1](inst/img/MR.png) ![alt-text-2](inst/img/MRframe.png)
 
 This package provides functionality for the following operations:
 
