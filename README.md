@@ -263,9 +263,62 @@ egger
 0.3834112
 > $egger.i
 0.01288551
-
 > $egger.i.se
 0.03004332
 > $egger.i.p
 0.6701895
 ```
+
+After this, the Cochran's Q test can be applied. Which is a method that is used to find SNPs which have an effect that is to great and can bias the estimates, and or removes possible pleiotropic causing SNPs. This is an iterative method that calculates the Q term for each SNP, calculates an overal Q term. Than this overal term is tested, and if this test does not exceeds a given threshold it removes the max Q term and restarts the iteration until this threshold is met. This function returns a vector with 1 or 0 indicating the SNPs should be used in re-calculating the estimates from IVW and MR-egger. This method is called by `mr.cochrans.Q.test`.
+
+```
+# apply cochran's Q test
+h$cochran.Q <- mr.cochran.Q.test(data = h, pval = .05)$cochran.Q
+
+# the data has been order decreasing to show that two SNPs are removed
+head(h[order(h$cochran.Q, decreasing = F),])
+```
+|SNP        |         By|        Bx|     By.se|     Bx.se|pval  |effect_allele |other_allele |         iv|     iv.se|      iv.p| cochran.Q|
+|-----------|-----------|----------|----------|----------|------|--------------|-------------|-----------|----------|----------|----------|
+|rs6708413  |  0.1764711| 0.0877808| 0.0214863| 0.0102041|9e-14 |G             |A            |  2.0103612| 0.3384179| 0.0000000|         0|
+|rs6920220  |  0.2499802| 0.0947617| 0.0220592| 0.0102041|1e-14 |A             |G            |  2.6379887| 0.3672617| 0.0000000|         0|
+|rs10051722 |  0.0330399| 0.0616269| 0.0201223| 0.0107204|9e-09 |A             |C            |  0.5361268| 0.3395761| 0.0571896|         1|
+|rs10761659 | -0.0207825| 0.1538111| 0.0187661| 0.0100349|5e-53 |G             |A            | -0.1351173| 0.1223258| 0.8653269|         1|
+|rs11641184 | -0.0201007| 0.0772895| 0.0185328| 0.0102041|1e-14 |A             |C            | -0.2600699| 0.2422305| 0.8585093|         1|
+|rs12627970 | -0.0574173| 0.1093163| 0.0231297| 0.0127551|2e-18 |G             |A            | -0.5252399| 0.2202822| 0.9914464|         1|
+
+After the Cochran's Q test is applied, the estimates can be recalculated. For this the same functions are used: `mr.inverse.variance.weighted.method`, and `mr.egger.method`, but here the `subset` parameter must be used to define which genetic variants should not be used in recalculating the causal estimates.
+```
+inverse.variance.weighted.Q <- mr.inverse.variance.weighted.method(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se, subset = h$cochran.Q)
+inverse.variance.weighted.Q
+> $ivw
+0.1357301
+> $ivw.se
+0.03196
+> $ivw.p
+2.167729e-05
+
+egger.Q <- mr.egger.method(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se, subset = h$cochran.Q)
+egger.Q
+> $egger
+0.09346427
+> $egger.se
+0.0988217
+> $egger.p
+0.3499359
+> $egger.i
+0.004373831
+> $egger.i.se
+0.02372792
+> $egger.i.p
+0.8546839
+```
+
+For a brief overview what operations took place, see figure 3 and 4, which gives an overview of all the operations that took place and in which order. The first step in the Mendelian Randomization approach is the pre-processing of the exposure; selecting for genome-wide significance, removal of genetic variants without effect size, and the removal of the ambiguous alleles. And after that the negative signs of the genetic variants in the exposure are flipped. Then the data set is clumped and proxied for LD, because we do not want our data set to suffer from pleiotropic effects which can be reintroduced by linkage disequilibrium. Then the outcome is aligned on the exposure and the intersect between both data sets is taken. After these steps the causality between exposure and outcome can be estimated and tested with the given methods in this packages.
+
+Figure 1: An overview of the Mendelian Randomization pipline part 1                           | Figure 2: An overview of the Mendelian Randomization pipline part 2
+:-------------------------------:|:------------------------------------:
+![alt-text-1](inst/img/pipeline1.png) | ![alt-text-2](inst/img/pipeline2.png)
+
+
+After all the data processing and calculating the Mendelian Randomization Analysis can be plotted. This is done with `mr.plot`.
