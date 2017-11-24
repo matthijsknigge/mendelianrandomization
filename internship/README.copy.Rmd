@@ -176,7 +176,7 @@ head(h)
 |rs1044429 |-0.0021610 |0.2879488 |0.003677 |0.02846428 | 4.685000e-24        |     C |           T|
 
 
-We do not want out data set to suffer from pleiotropic effects which can be reintroduced by linkage equilibrium. So we will clump our data set, and the SNPs that are in LD with each other will be removed en will be replaced by a suitable proxy. The clump methods has various other parameters that can be used, but here we use the default, this is done with `mr.clump`. Within the table itself nothing changes, it is the same as the previous table shown
+We do not want our data set to suffer from pleiotropic effects which can be reintroduced by linkage disequilibrium. So we will clump our data set, and the SNPs that are in LD with each other will be removed and will be replaced by a suitable proxy. The clump methods has various other parameters that can be used, but here we use the default, this is done with `mr.clump`. Within the table itself nothing changes, it is the same as the previous table shown
 
 ```{r}
 h <- mr.clump(data = h, refdat = "path/to/reference", verbose = T)
