@@ -6,6 +6,7 @@
 #' @param Bx Vector of genetic effects of exposure
 #' @param By.se Standard errors of genetic effects on outcome
 #' @param Bx.se Standard errors of genetic effects on exposure
+#' @param subset vector containing 1-0 indicating to use it in the calculation or not. Default is NULL.
 #'
 #' @keywords mendelian randomization egger method
 #' @export
@@ -19,7 +20,18 @@
 #'         egger.i: Estimate of horizontal pleiotropy (intercept)
 #'         egger.i.se: Standard error of intercept
 #'         egger.i.p: p-value of intercept
-mr.egger.method <- function(By, Bx, By.se, Bx.se){
+mr.egger.method <- function(By, Bx, By.se, Bx.se, subset = NULL){
+  # if sum subset == 0, do not apply
+  if(sum(subset) == 0){
+    subset <- NULL
+  }
+  # if subset is used, filter data
+  if(!is.null(subset)){
+    By <- By[which(subset == 1)]
+    Bx <- Bx[which(subset == 1)]
+    By.se <- By.se[which(subset == 1)]
+    Bx.se <- Bx.se[which(subset == 1)]
+  }
   # test if vector is empty
   if(length(By) == 0){
     return(list(egger = NA, egger.se = NA, egger.p = NA, egger.i = NA, egger.i.se = NA, egger.i.p = NA))
