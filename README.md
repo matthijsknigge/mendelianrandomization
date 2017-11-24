@@ -52,9 +52,21 @@ install.packages("devtools")
 
 And then you are ready to install the `mendelianRandomization` package:
 
-```{r, }
+```
 devtools::install_bitbucket("matthijsknigge/mendelianRandomization")
 ```
+
+Other libraries that are needed in this package:
+
+```
+install.packages("stringr")
+install.packages("readr")
+install.packages("ggplot2")
+install.packages("ggExtra")
+install.packages("gridExtra")
+install.packages("latex2exp")
+```
+This package needs R version 3.2.0 or greater.
 
 # Tutorial
 
@@ -70,10 +82,36 @@ exposure <- data("celiac")
 outcome  <- data("hdl")
 ```
 
+# Tutorial
+
+---
+
+The package also contains test data for doing a basic Mendelian Randomization analysis. The first step is to read the data. For this analysis we want to infer causality between an exposure and outcome. In this setup the exposure is Inflammatory bowel disease, and the outcome is Celiac Disease.
+
+```{r}
+# the exposure
+data("celiac")
+outcome <- celiac
+
+# the outcome
+data("Inflammatory.bowel.disease")
+exposure  <- Inflammatory.bowel.disease
+```
 
 
-
-
+Lets check out the data.
+```
+head(outcome)
+```
+Here we se a column with SNP identifiers, the effect allele, the effectsize, the pvalue, and the standard deviation.
+|SNP        |effect_allele |       Z_OR|         P|        se|
+|:----------|:-------------|----------:|---------:|---------:|
+|rs61733845 |T             |  0.0353671| 0.4249000| 0.0443226|
+|rs1320571  |A             |  0.0188218| 0.6590000| 0.0426513|
+|rs9729550  |A             |  0.1004835| 0.0000025| 0.0213295|
+|rs1815606  |G             |  0.0677437| 0.0007151| 0.0200204|
+|rs7515488  |T             | -0.1028082| 0.0001195| 0.0267232|
+|rs11260562 |A             | -0.0393647| 0.3344000| 0.0407802|
 
 
 
