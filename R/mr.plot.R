@@ -58,12 +58,12 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
   p <- p + geom_errorbar(aes(ymin = By - qnorm(0.975)*By.se, ymax = By + qnorm(0.975)*By.se), colour = "darkblue", alpha = 0.3)
   p <- p + geom_errorbarh(aes(xmin = Bx - qnorm(0.975)*Bx.se, xmax = Bx + qnorm(0.975)*Bx.se), colour = "darkblue", alpha = 0.3)
   # draw inverse varaince weighted
-  if(!is.null(ivw)){
-  p <- p + geom_abline(aes(intercept = 0, slope = ivw, linetype = "IVW"), color = "darkblue", alpha = .2)
+  if(!is.null(ivw) & is.null(ivw.Q)){
+  p <- p + geom_abline(aes(intercept = 0, slope = ivw, linetype = "IVW"), color = "darkblue")
   }
   # draw egger method
-  if(!is.null(egger) & !is.null(egger.i)){
-  p <- p + geom_abline(aes(intercept = egger.i, slope = egger, linetype = "MRegger"), color = "darkblue", alpha = .2)
+  if(!is.null(egger) & is.null(egger.i.Q) & is.null(egger.Q)){
+  p <- p + geom_abline(aes(intercept = egger.i, slope = egger, linetype = "MRegger"), color = "darkblue")
   }
   # apply Chochran's Q test
   if(!is.null(chochran.Q)){
@@ -76,10 +76,18 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
   # draw inverse variance weighted effect after Chochran's Q test
   if(!is.null(ivw.Q)){
     p <- p + geom_abline(aes(intercept = 0, slope = ivw.Q, linetype = "IVW.Q"), color = "darkblue")
+    # draw ivw before Q
+    if(!is.null(ivw)){
+      p <- p + geom_abline(aes(intercept = 0, slope = ivw, linetype = "IVW"), color = "darkblue", alpha = .2)
+    }
   }
   # draw egger method effect after Chochran's Q test
   if(!is.null(egger.Q) & !is.null(egger.i.Q)){
     p <- p + geom_abline(aes(intercept = egger.i.Q, slope = egger.Q, linetype = "MRegger.Q"), color = "darkblue")
+    # also draw egger before Q
+    if(!is.null(egger) & !is.null(egger.i)){
+      p <- p + geom_abline(aes(intercept = egger.i, slope = egger, linetype = "MRegger"), color = "darkblue", alpha = .2)
+    }
   }
   # manually change legend or override the existing one
   p <- p + scale_linetype_manual(name = "Method", values = c(IVW = "dashed", MRegger = "solid", IVW.Q = "dashed", MRegger.Q = "solid"))
@@ -131,7 +139,7 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
                        c("after Q", sum(chochran.Q) , signif(egger.Q.p.fdr, digits = 3), signif(ivw.Q.p.fdr, digits = 3), signif(egger.Q.i.p, digits = 3)))
     }
 
-
+    # add annotation
     p <- p + annotation_custom(tableGrob(mytable, theme = tt3),
                                xmin = layer_scales(p)$x$range$range[2]*.8,
                                xmax = layer_scales(p)$x$range$range[2]*.8,
