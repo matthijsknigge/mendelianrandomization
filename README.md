@@ -118,13 +118,29 @@ Here we se a column with SNP identifiers, the effect allele, the effectsize, the
 ```
 head(exposure)
 ```
-Here there is a column with the SNP identifiers, effect_allele, the other_allele, the effectsize, the standard deviation of the genetic effect, and the p value.
+Here there is a column with the SNP identifiers, effect_allele, the effectsize, the standard deviation of the genetic effect, and the p value.
 
-|SNP        |effect_allele |other_allele |      beta|        se|  pval|
-|------|-----------|--------------|-------------|----------|----------|------|
-|13665 |rs1003342  |NA            |NA           |        NA|        NA| 0e+00|
-|13666 |rs10051722 |A             |NA           | 0.0616269| 0.0107204| 0e+00|
-|13667 |rs10061469 |A             |G            | 0.0518248| 0.0105946| 1e-06|
-|13668 |rs10065637 |G             |A            | 0.0686809| 0.0128937| 1e-07|
-|13669 |rs10142466 |NA            |NA           |        NA|        NA| 0e+00|
-|13671 |rs10486483 |A             |G            | 0.0602257| 0.0102041| 2e-07|
+|SNP        |effect_allele |      beta|        se|  pval|
+|------|-----------|--------------|----------|----------|------|
+|13665 |rs1003342  |NA            |        NA|        NA| 0e+00|
+|13666 |rs10051722 |A             | 0.0616269| 0.0107204| 0e+00|
+|13667 |rs10061469 |A             | 0.0518248| 0.0105946| 1e-06|
+|13668 |rs10065637 |G             | 0.0686809| 0.0128937| 1e-07|
+|13669 |rs10142466 |NA            |        NA|        NA| 0e+00|
+|13671 |rs10486483 |A             | 0.0602257| 0.0102041| 2e-07|
+
+We need both files at least to contain the SNP id, beta, se, pval, effect allele. And the exposure must containt both alleles to infer in what the direction the effect takes place. Since the other allele is missing for the exposure, we have to query it. The alles are queried with `mr.find.missing.alleles`.
+
+```
+exposure <- mr.find.missing.allelic.information(data = exposure, 
+                                              thousand.G = "path/to/reference.bim")
+head(exposure)
+```
+|      |SNP        |effect_allele |      beta|        se|  pval|other_allele |
+|------|-----------|--------------|----------|----------|------|-------------|
+|13665 |rs1003342  |NA            |        NA|        NA| 0e+00|             |
+|13666 |rs10051722 |A             | 0.0616269| 0.0107204| 0e+00|C            |
+|13667 |rs10061469 |A             | 0.0518248| 0.0105946| 1e-06|             |
+|13668 |rs10065637 |G             | 0.0686809| 0.0128937| 1e-07|             |
+|13669 |rs10142466 |NA            |        NA|        NA| 0e+00|             |
+|13671 |rs10486483 |A             | 0.0602257| 0.0102041| 2e-07|G            |
