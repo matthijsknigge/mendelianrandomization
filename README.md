@@ -4,6 +4,8 @@
 
 Mendelian Randomization (MR) is the process that refers to the random segregation and assortment of genes from ancestors to offspring that takes place during gamete formation and gives a method of using genetic variants to make casual inferences regarding the relationship between exposure and outcomes. The basic principle utilized in the MR pipeline, is that if a genetic variant either alters the level of or mimics the biological effects of a exposure that itself alters disease risk, then these genetic variants should be related to disease risk.The goal of MR studies is to provide evidence for or against a causal relationship between a exposure and a disease. Genetic variants are used because these are less susceptible for confounding because of it is subjected to Mendel’s first law, the law of of segregation. These genetic variants segregate independently and randomly from environmental factors, and it can be assumed that genetic variants segregate independently from other traits.
 
+![alt-text-1](inst/img/MR.png) ![alt-text-2](inst/img/MRframe.png)
+
 This package provides functionality for the following operations:
 
   * Calculate the standard deviation from the effectsize or log odd score when it is not present. `mr.calculate.se()`
@@ -67,20 +69,6 @@ install.packages("gridExtra")
 install.packages("latex2exp")
 ```
 This package needs R version 3.2.0 or greater.
-
-# Tutorial
-
----
-
-The package also contains test data for doing a basic Mendelian Randomization analysis. The first step is to read the data. For this analysis we want to infer causality between an exposure and outcome. In this setup the exposure is Celiac Disease, and the outcome is High-density-lipoproteïne (HDL).
-
-```
-# the exposure
-exposure <- data("celiac")
-
-# the outcome
-outcome  <- data("hdl")
-```
 
 # Tutorial
 
@@ -156,7 +144,7 @@ length(exposure$SNP)
 length(outcome$rsid)
 > 97434
 ```
-The next step is to pre-process the exposure, and only the exposure because we are interested in the effect of the exposure on the outcome. We select for genome-wide significance, thus the p-value of the exposure must > 5*10^-8. Also the SNPs without effectsize will be removed, the SNPs from which it is impossible to measure the strand will be removed, and the duplicates will be removed. Besides this, also all negative effectsizes are flipped, and their alleles are also flipped. This is done because we want to measure the positive effect of the exposure on the outcome. This is done with `mr.pre.process`.
+The next step is to pre-process the exposure, and only the exposure because we are interested in the effect of the exposure on the outcome. We select for genome-wide significance, thus the p-value of the exposure must > 5*10^-8. Also the SNPs without effectsize will be removed, the SNPs from which it is impossible to measure the strand will be removed, and the duplicates will be removed. Besides this, also all negative effectsizes are flipped, and their alleles are also flipped. This is done because we want to measure the positive effect of the exposure on the outcome. And genetic variants without effect size are removed. This is done with `mr.pre.process`.
 
 ```
 exposure <- mr.pre.process(B = exposure$beta, 
