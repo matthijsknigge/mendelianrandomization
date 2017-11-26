@@ -335,7 +335,7 @@ p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se,
 ggdraw(p)
 ```
 
-Figure 5: The MR plot, this shows that a lower risk for Inflammatory Bowel disease protects for Celiac Disease. | Figure 6: Funnel plots that describe the accuracy of the methods.
-:-------------------------------------:|:------------------------------------------------------------------------------------------:
-![alt-text-1](inst/img/celiac~ibd.png) |![alt-text-1](inst/img/f.inverse.variance.weighted.png) ![alt-text-1](inst/img/f.egger.png)
+Figure 5: The MR plot, this shows that a lower risk for Inflammatory Bowel disease protects for Celiac Disease. | Figure 6: Funnel plot for the Inverse-Variance Weighted method that describe the accuracy of the methods. | Figure 7: Funnel plot for the MR-egger that describe the accuracy of the methods. 
+:-------------------------------------:|:-------------------------------------------------------:|:-----------------------------------:
+![alt-text-1](inst/img/celiac~ibd.png) |![alt-text-1](inst/img/f.inverse.variance.weighted.png)  | ![alt-text-1](inst/img/f.egger.png)
        
