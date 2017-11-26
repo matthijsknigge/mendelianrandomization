@@ -337,7 +337,7 @@ ggdraw(p)
 
 Figure 5: The MR plot, this shows that a lower risk for Inflammatory Bowel disease protects for Celiac Disease. | Figure 6: Funnel plots that describe the accuracy of the methods.
 :-------------------------------------:|:------------------------------------------------------------------------------------------:
-![alt-text-1](inst/img/celiac~ibd.png) |                                                       |
+![alt-text-1](inst/img/celiac~ibd.png) |                                                       |![alt-text-1](inst/img/f.inverse.variance.weighted.png)
                                        |:-----------------------------------------------------:|:----------------------------------:
-                                       |![alt-text-1](inst/img/f.inverse.variance.weighted.png)|![alt-text-1](inst/img/f.egger.png)
+                                       |                                                       |![alt-text-1](inst/img/f.egger.png)
                                        |                                                          
