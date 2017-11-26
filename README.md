@@ -335,7 +335,4 @@ p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se,
 ggdraw(p)
 ```
 
-
-  
-:-------------------------------:|:------------------------------------:
 ![alt-text-1](inst/img/celiac~ibd.png) | 
