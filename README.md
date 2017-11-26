@@ -2,9 +2,7 @@
 
 ---
 
-|
-|:-------------------------------------------------------------------------------------------------:
-|Mendelian Randomization (MR) is the process that refers to the random segregation and assortment of |genes from ancestors to offspring that takes place during gamete formation and gives a method of |using genetic variants to make casual inferences regarding the relationship between exposure and |outcomes. The basic principle utilized in the MR pipeline, is that if a genetic variant either |alters the level of or mimics the biological effects of a exposure that itself alters disease risk, |then these genetic variants should be related to disease risk.The goal of MR studies is to provide |evidence for or against a causal relationship between a exposure and a disease. Genetic variants |are used because these are less susceptible for confounding because of it is subjected to Mendel’s |first law, the law of of segregation. These genetic variants segregate independently and randomly |from environmental factors, and it can be assumed that genetic variants segregate independently |from other traits.
+Mendelian Randomization (MR) is the process that refers to the random segregation and assortment of genes from ancestors to offspring that takes place during gamete formation and gives a method of using genetic variants to make casual inferences regarding the relationship between exposure and outcomes. The basic principle utilized in the MR pipeline, is that if a genetic variant either alters the level of or mimics the biological effects of a exposure that itself alters disease risk, then these genetic variants should be related to disease risk.The goal of MR studies is to provide evidence for or against a causal relationship between a exposure and a disease. Genetic variants are used because these are less susceptible for confounding because of it is subjected to Mendel’s first law, the law of of segregation. These genetic variants segregate independently and randomly from environmental factors, and it can be assumed that genetic variants segregate independently from other traits.
 
 
 The MR approach is quite similar to Randomized Controlled Trials, in where there is a population sample which is divided randomly into two arms to evenly distribute potential confounders, upon both of these arms are some form of experiment is conducted, where one group is the case and the other is the control. In the next step the effects take place which are on-, off-target effects which in turn will be compared to the control group and by which researchers are capable of doing a study. Due to this on-, off-target effects the direction of relationship is difficult to measure. The random segregation of  genes in the Mendelian dogma is a natural way of dividing the population into two arms where instead the case group has any given genotype, and the control has any given genotype that differs. These different genotypes result in different products, which in turn can be measured and compared. And this product is free from the effects of confounding and reverse causality because the germline precedes the disease of interest. And the genetic variants segregate randomly and independently. Mendelian Randomization gives us the power to use genetic variants in observational settings to make causal inferences regarding the relationship between an exposure and an outcome, and for this the summary statistics from Genome-Wide-Association-Studies (GWAS) can be used. See figure 1.
@@ -324,3 +322,20 @@ Figure 3: An overview of the Mendelian Randomization pipline part 1             
 
 
 After all the data processing and calculating the Mendelian Randomization Analysis can be plotted. This is done with `mr.plot`.
+
+```
+p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se,
+             iv = h$iv, iv.se = h$iv.se, 
+             ivw = inverse.variance.weighted$ivw, 
+             egger = egger$egger, egger.i = egger$egger.i, egger.i.p = egger$egger.i.p, 
+             chochran.Q = h$cochran.Q, 
+             ivw.Q = inverse.variance.weighted.Q$ivw, 
+             egger.Q = egger.Q$egger, egger.Q.i = egger.Q$egger.i, egger.Q.i.p = egger.Q$egger.i.p, 
+             outcome.name = "Celiac", exposure.name = "Inflammatory Bowel Disease", show.stats = F)
+ggdraw(p)
+```
+
+
+  
+:-------------------------------:|:------------------------------------:
+![alt-text-1](inst/img/celiac~ibd.png) | 
