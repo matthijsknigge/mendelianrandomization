@@ -6,7 +6,7 @@
 \usage{
 mr.forest.plot(SNP, iv, iv.se, chochran.Q = NULL, ivw = NULL,
   ivw.se = NULL, egger = NULL, egger.se = NULL, ivw.Q = NULL,
-  ivw.se.Q = NULL, egger.Q = NULL, egger.se.Q = NULL, outcome.name,
+  ivw.Q.se = NULL, egger.Q = NULL, egger.Q.se = NULL, outcome.name,
   exposure.name)
 }
 \arguments{
@@ -26,11 +26,11 @@ mr.forest.plot(SNP, iv, iv.se, chochran.Q = NULL, ivw = NULL,
 
 \item{ivw.Q}{numeric after correcting for pleotropic effect this is the re-calculated inverse variance weighted estimate. Default is NULL.}
 
-\item{ivw.se.Q}{numeric after correcting for pleotropic effect this is the re-calculated standard error of the inverse variance weighted estimate. Default is NULL.}
+\item{ivw.Q.se}{numeric after correcting for pleotropic effect this is the re-calculated standard error of the inverse variance weighted estimate. Default is NULL.}
 
 \item{egger.Q}{numeric after correcting for pleotropic effect this is the re-calculated egger estimate. Default is NULL.}
 
-\item{egger.se.Q}{numeric after correcting for pleotropic effect this is the re-calculated standard error of the egger estimate. Default is NULL.}
+\item{egger.Q.se}{numeric after correcting for pleotropic effect this is the re-calculated standard error of the egger estimate. Default is NULL.}
 }
 \value{
 forest plot

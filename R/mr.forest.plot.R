@@ -10,8 +10,8 @@
 #' @param egger.se Standard error of MR egger estimate
 #' @param ivw.Q numeric after correcting for pleotropic effect this is the re-calculated inverse variance weighted estimate. Default is NULL.
 #' @param egger.Q numeric after correcting for pleotropic effect this is the re-calculated egger estimate. Default is NULL.
-#' @param ivw.se.Q numeric after correcting for pleotropic effect this is the re-calculated standard error of the inverse variance weighted estimate. Default is NULL.
-#' @param egger.se.Q numeric after correcting for pleotropic effect this is the re-calculated standard error of the egger estimate. Default is NULL.
+#' @param ivw.Q.se numeric after correcting for pleotropic effect this is the re-calculated standard error of the inverse variance weighted estimate. Default is NULL.
+#' @param egger.Q.se numeric after correcting for pleotropic effect this is the re-calculated standard error of the egger estimate. Default is NULL.
 #'
 #' @keywords forest
 #' @export
@@ -19,16 +19,16 @@
 #' mr.forest.plot()
 #'
 #' @return forest plot
-mr.forest.plot <- function(SNP, iv, iv.se, chochran.Q = NULL, ivw = NULL, ivw.se = NULL, egger = NULL, egger.se = NULL, ivw.Q = NULL, ivw.se.Q = NULL, egger.Q = NULL, egger.se.Q = NULL,
+mr.forest.plot <- function(SNP, iv, iv.se, chochran.Q = NULL, ivw = NULL, ivw.se = NULL, egger = NULL, egger.se = NULL, ivw.Q = NULL, ivw.Q.se = NULL, egger.Q = NULL, egger.Q.se = NULL,
                            outcome.name, exposure.name){
   require(ggplot2); require(latex2exp);
   # check if Chochran's Q is used on data set
   if(sum(chochran.Q) == 0){
     chochran.Q <- NULL
-    ivw.se.Q <- NULL
+    ivw.Q.se <- NULL
     egger.Q <- NULL
     ivw.Q <- NULL
-    egger.se.Q <- NULL
+    egger.Q.se <- NULL
   }
 
   if(!is.null(chochran.Q)){
@@ -39,8 +39,8 @@ mr.forest.plot <- function(SNP, iv, iv.se, chochran.Q = NULL, ivw = NULL, ivw.se
     # add methods to data.frame
     new.row <- data.frame(SNP = "IVW",                iv = ivw,     iv.se = ivw.se,     chochran.Q = NA,  color = "grey"); df <- rbind(df, new.row)
     new.row <- data.frame(SNP = "Egger",              iv = egger,   iv.se = egger.se,   chochran.Q = NA,  color = "grey"); df <- rbind(df, new.row)
-    new.row <- data.frame(SNP = "IVW Chocharn's Q",   iv = ivw.Q,   iv.se = ivw.se.Q,   chochran.Q = NA, color = "darkblue"); df <- rbind(df, new.row)
-    new.row <- data.frame(SNP = "Egger Chocharn's Q", iv = egger.Q, iv.se = egger.se.Q, chochran.Q = NA, color = "purple"); df <- rbind(df, new.row)
+    new.row <- data.frame(SNP = "IVW Chocharn's Q",   iv = ivw.Q,   iv.se = ivw.Q.se,   chochran.Q = NA, color = "darkblue"); df <- rbind(df, new.row)
+    new.row <- data.frame(SNP = "Egger Chocharn's Q", iv = egger.Q, iv.se = egger.Q.se, chochran.Q = NA, color = "purple"); df <- rbind(df, new.row)
   }
   if(is.null(chochran.Q)){
     # create data.frame
@@ -84,15 +84,15 @@ mr.forest.plot <- function(SNP, iv, iv.se, chochran.Q = NULL, ivw = NULL, ivw.se
                        fill = "grey", alpha = .4, color = NA)
 
     p <- p +   annotate("rect",
-                        xmin = egger.Q - qnorm(0.975)*egger.se.Q,
-                        xmax = egger.Q + qnorm(0.975)*egger.se.Q,
+                        xmin = egger.Q - qnorm(0.975)*egger.Q.se,
+                        xmax = egger.Q + qnorm(0.975)*egger.Q.se,
                         ymin = -Inf,
                         ymax = df$SNP[length(df$SNP)-4],
                         fill = "steelblue", alpha = .6, color = NA)
 
     p <- p +  annotate("rect",
-                       xmin = ivw.Q - qnorm(0.975)*ivw.se.Q,
-                       xmax = ivw.Q + qnorm(0.975)*ivw.se.Q,
+                       xmin = ivw.Q - qnorm(0.975)*ivw.Q.se,
+                       xmax = ivw.Q + qnorm(0.975)*ivw.Q.se,
                        ymin = -Inf,
                        ymax = df$SNP[length(df$SNP)-4],
                        fill = "purple", alpha = .4, color = NA)
