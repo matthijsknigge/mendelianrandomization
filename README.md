@@ -321,7 +321,7 @@ Figure 3: An overview of the Mendelian Randomization pipline part 1             
 ![alt-text-1](inst/img/pipeline2.png) | ![alt-text-2](inst/img/pipeline1.png)
 
 
-After all the data processing and calculating the Mendelian Randomization Analysis can be plotted. This is done with `mr.plot`.
+After all the data processing and calculating the Mendelian Randomization Analysis can be plotted. This is done with `mr.plot`. For the result, see figure 5. To visual access the precision of these methods, this package has the option to draw funnel plots with `mr.funnel.plot`. In these plots we want to see a weighted balance in distribution under the given confidence interval. See figure 6.
 
 ```
 p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se,
@@ -335,4 +335,8 @@ p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se,
 ggdraw(p)
 ```
 
-![alt-text-1](inst/img/celiac~ibd.png) | 
+Figure 5: The MR plot, this shows that a lower risk for Inflammatory Bowel disease protects for Celiac Disease. | Figure 6: Funnel plots that describe the accuracy of the methods.
+:-------------------------------:|:------------------------------------:
+![alt-text-1](inst/img/celiac~ibd.png) |         |
+                                        :-------:|:----------:
+                                          ![alt-text-1](inst/img/f.inverse.variance.weighted.png)|![alt-text-1](inst/img/f.egger.png)
