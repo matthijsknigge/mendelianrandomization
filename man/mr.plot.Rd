@@ -5,11 +5,11 @@
 \title{Plot MR results}
 \usage{
 mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
-  egger.i = NULL, chochran.Q = NULL, ivw.Q = NULL, egger.Q = NULL,
-  egger.i.Q = NULL, egger.p.fdr = NULL, ivw.p.fdr = NULL,
-  egger.i.p = NULL, outcome.name, exposure.name, legend = TRUE,
-  position = "bottom", show.stats = TRUE, egger.Q.p.fdr = NULL,
-  ivw.Q.p.fdr = NULL, egger.Q.i.p = NULL)
+  egger.i = NULL, egger.i.p = NULL, chochran.Q = NULL, ivw.Q = NULL,
+  egger.Q = NULL, egger.Q.i = NULL, egger.Q.i.p = NULL,
+  egger.p.fdr = NULL, ivw.p.fdr = NULL, egger.Q.p.fdr = NULL,
+  ivw.Q.p.fdr = NULL, outcome.name, exposure.name, legend = TRUE,
+  position = "bottom", show.stats = TRUE)
 }
 \arguments{
 \item{By}{Vector of genetic effects of outcome}
@@ -30,19 +30,25 @@ mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
 
 \item{egger.i}{numeric pleiotropic estimate of egger, this is the intersept. Default is NULL.}
 
+\item{egger.i.p}{value indicating intercept significant different from zero.}
+
 \item{chochran.Q}{vector indicating if the SNPs is removed by Chochran's Q test due to pleiotropic effects. Default is NULL.}
 
 \item{ivw.Q}{numeric after correcting for pleotropic effect this is the re-calculated inverse variance weighted estimate. Default is NULL.}
 
 \item{egger.Q}{numeric after correcting for pleotropic effect this is the re-calculated egger estimate. Default is NULL.}
 
-\item{egger.i.Q}{numeric after correcting for pleotropic effect this is the re-calculated egger pleiotropic estimate. Default is NULL.}
+\item{egger.Q.i}{numeric after correcting for pleotropic effect this is the re-calculated egger pleiotropic estimate. Default is NULL.}
+
+\item{egger.Q.i.p}{value indicating intercept significant different from zero after Q correction.}
 
 \item{egger.p.fdr}{value indicating slope significant different from zero after FDR correction.}
 
 \item{ivw.p.fdr}{value indicating slope significant different from zero after FDR correction.}
 
-\item{egger.i.p}{value indicating intercept significant different from zero.}
+\item{egger.Q.p.fdr}{value indicating significance of slope from egger after Q pruning}
+
+\item{ivw.Q.p.fdr}{value indicating significance of estimate ivw after Q pruning}
 
 \item{outcome.name}{string of the outcome name. Default is NULL.}
 
@@ -53,12 +59,6 @@ mr.plot(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL,
 \item{position}{position of legend. Default bottom.}
 
 \item{show.stats}{boolean show statistics summary. Default is TRUE.}
-
-\item{egger.Q.p.fdr}{value indicating significance of slope from egger after Q pruning}
-
-\item{ivw.Q.p.fdr}{value indicating significance of estimate ivw after Q pruning}
-
-\item{egger.Q.i.p}{value indicating intercept significant different from zero after Q correction.}
 }
 \value{
 plot object
@@ -68,7 +68,7 @@ Plot MR results
 }
 \examples{
 mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, egger.i = NULL, chochran.Q = NULL,
-                    ivw.Q = NULL, egger.Q = NULL, egger.i.Q = NULL, outcome.name, exposure.name, legend = TRUE)
+                    ivw.Q = NULL, egger.Q = NULL, egger.Q.i = NULL, outcome.name, exposure.name, legend = TRUE)
 }
 \author{
 Matthijs Knigge

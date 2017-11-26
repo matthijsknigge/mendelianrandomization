@@ -16,7 +16,7 @@
 #' @param exposure.name string of the exposure name. Default is NULL.
 #' @param ivw.Q numeric after correcting for pleotropic effect this is the re-calculated inverse variance weighted estimate. Default is NULL.
 #' @param egger.Q numeric after correcting for pleotropic effect this is the re-calculated egger estimate. Default is NULL.
-#' @param egger.i.Q numeric after correcting for pleotropic effect this is the re-calculated egger pleiotropic estimate. Default is NULL.
+#' @param egger.Q.i numeric after correcting for pleotropic effect this is the re-calculated egger pleiotropic estimate. Default is NULL.
 #' @param legend boolean use show legend, or do not. Default is TRUE
 #' @param position position of legend. Default bottom.
 #' @param show.stats boolean show statistics summary. Default is TRUE.
@@ -31,17 +31,23 @@
 #' @export
 #' @examples
 #' mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, egger.i = NULL, chochran.Q = NULL,
-#'                     ivw.Q = NULL, egger.Q = NULL, egger.i.Q = NULL, outcome.name, exposure.name, legend = TRUE)
+#'                     ivw.Q = NULL, egger.Q = NULL, egger.Q.i = NULL, outcome.name, exposure.name, legend = TRUE)
 #' @return plot object
-mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, egger.i = NULL, chochran.Q = NULL,
-                    ivw.Q = NULL, egger.Q = NULL, egger.i.Q = NULL, egger.p.fdr = NULL, ivw.p.fdr = NULL, egger.i.p = NULL,
-                    outcome.name, exposure.name, legend = TRUE, position = "bottom", show.stats = TRUE,
-                    egger.Q.p.fdr = NULL, ivw.Q.p.fdr = NULL, egger.Q.i.p = NULL){
+mr.plot <- function(By, Bx, By.se, Bx.se,
+                    iv, iv.se,
+                    ivw = NULL,
+                    egger = NULL, egger.i = NULL, egger.i.p = NULL,
+                    chochran.Q = NULL,
+                    ivw.Q = NULL,
+                    egger.Q = NULL, egger.Q.i = NULL, egger.Q.i.p = NULL,
+                    egger.p.fdr = NULL, ivw.p.fdr = NULL,
+                    egger.Q.p.fdr = NULL, ivw.Q.p.fdr = NULL,
+                    outcome.name, exposure.name, legend = TRUE, position = "bottom", show.stats = TRUE){
   require(ggplot2); require("RColorBrewer"); require(latex2exp); require(cowplot); require(gridExtra)
   # check if Chochran's Q is used on data set
   if(sum(chochran.Q) == 0){
     chochran.Q <- NULL
-    egger.i.Q <- NULL
+    egger.Q.i <- NULL
     egger.Q <- NULL
     ivw.Q <- NULL
   }
@@ -62,7 +68,7 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
   p <- p + geom_abline(aes(intercept = 0, slope = ivw, linetype = "IVW"), color = "darkblue")
   }
   # draw egger method
-  if(!is.null(egger) & is.null(egger.i.Q) & is.null(egger.Q)){
+  if(!is.null(egger) & is.null(egger.Q.i) & is.null(egger.Q)){
   p <- p + geom_abline(aes(intercept = egger.i, slope = egger, linetype = "MRegger"), color = "darkblue")
   }
   # apply Chochran's Q test
@@ -82,8 +88,8 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
     }
   }
   # draw egger method effect after Chochran's Q test
-  if(!is.null(egger.Q) & !is.null(egger.i.Q)){
-    p <- p + geom_abline(aes(intercept = egger.i.Q, slope = egger.Q, linetype = "MRegger.Q"), color = "darkblue")
+  if(!is.null(egger.Q) & !is.null(egger.Q.i)){
+    p <- p + geom_abline(aes(intercept = egger.Q.i, slope = egger.Q, linetype = "MRegger.Q"), color = "darkblue")
     # also draw egger before Q
     if(!is.null(egger) & !is.null(egger.i)){
       p <- p + geom_abline(aes(intercept = egger.i, slope = egger, linetype = "MRegger"), color = "darkblue", alpha = .2)
@@ -94,9 +100,9 @@ mr.plot <- function(By, Bx, By.se, Bx.se, iv, iv.se, ivw = NULL, egger = NULL, e
 
   # waring! extremely ugly code. Override legends is not flexible, this is a dirty workaround.
   if(!is.null(ivw.Q)){lty <- c(IVW = "dashed", IVW.Q = "dashed", MRegger = "solid"); alp <- c(0.1,1,0.1); co  <- c("darkblue", "darkblue", "darkblue")}
-  if(!is.null(egger.Q) & !is.null(egger.i.Q)){lty <- c(IVW = "dashed", MRegger.Q = "solid", MRegger = "solid"); alp <- c(0.1,1,0.1); co  <- c("darkblue", "darkblue", "darkblue")}
-  if(!is.null(ivw.Q) & !is.null(egger.Q) & !is.null(egger.i.Q)){lty <- c(IVW = "dashed", IVW.Q = "dashed", MRegger = "solid", MRegger.Q = "solid"); alp <- c(0.1,1,0.1, 1); co  <- c("darkblue", "darkblue", "darkblue", "darkblue")}
-  if(!is.null(ivw.Q) | !is.null(egger.Q) & !is.null(egger.i.Q)){p <- p + guides( linetype = guide_legend(override.aes = list(linetype=lty, color=co, alpha=alp)))}
+  if(!is.null(egger.Q) & !is.null(egger.Q.i)){lty <- c(IVW = "dashed", MRegger.Q = "solid", MRegger = "solid"); alp <- c(0.1,1,0.1); co  <- c("darkblue", "darkblue", "darkblue")}
+  if(!is.null(ivw.Q) & !is.null(egger.Q) & !is.null(egger.Q.i)){lty <- c(IVW = "dashed", IVW.Q = "dashed", MRegger = "solid", MRegger.Q = "solid"); alp <- c(0.1,1,0.1, 1); co  <- c("darkblue", "darkblue", "darkblue", "darkblue")}
+  if(!is.null(ivw.Q) | !is.null(egger.Q) & !is.null(egger.Q.i)){p <- p + guides( linetype = guide_legend(override.aes = list(linetype=lty, color=co, alpha=alp)))}
   # legend for z-score
   p <- p + scale_colour_gradientn(colours = brewer.pal(9, "Blues")[2:9], name = TeX('$\\frac{\\hat{\\beta}_{IV}}{\\sigma_{\\hat{\\beta}_{IV}}}$'))
 
