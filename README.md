@@ -354,6 +354,13 @@ f.egger <- mr.funnel.plot(iv = h$iv, iv.se = h$iv.se,
 ggdraw(f.egger)
 
 # Forest plot
+fo <- mr.forest.plot(SNP = h$SNP, iv = h$iv, iv.se = h$iv.se, chochran.Q = h$cochran.Q,
+                     ivw = inverse.variance.weighted$ivw, ivw.se = inverse.variance.weighted$ivw.se,
+                     egger = egger$egger, egger.se = egger$egger.se,
+                     ivw.Q = inverse.variance.weighted.Q$ivw, ivw.Q.se = inverse.variance.weighted.Q$ivw.se,
+                     egger.Q = egger.Q$egger, egger.Q.se = egger.Q$egger.se,
+                     outcome.name = "Celiac", exposure.name = "Inflammatory Bowel Disease")
+ggdraw(fo)
 ```
 
 Figure 5: The MR plot, this shows that a lower risk for Inflammatory Bowel disease protects for Celiac Disease. | Figure 6: Forest plot of the MR analysis.
