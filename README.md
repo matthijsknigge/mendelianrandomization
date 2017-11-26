@@ -321,9 +321,10 @@ Figure 3: An overview of the Mendelian Randomization pipline part 1             
 ![alt-text-1](inst/img/pipeline2.png) | ![alt-text-2](inst/img/pipeline1.png)
 
 
-After all the data processing and calculating the Mendelian Randomization Analysis can be plotted. This is done with `mr.plot`. For the result, see figure 5. To visual access the precision of these methods, this package has the option to draw funnel plots with `mr.funnel.plot`. In these plots we want to see a weighted balance in distribution under the given confidence interval. See figure 6.
+After all the data processing and calculating the Mendelian Randomization Analysis can be plotted. This is done with `mr.plot`. For the result, see figure 5. To visual access the precision of these methods, this package has the option to draw funnel plots with `mr.funnel.plot`. In these plots we want to see a weighted balance in distribution under the given confidence interval. See figure 7, and 8. For further inspection of the scope of the methods, this package contains the function to draw a forest plot, this is done with `mr.forest.plot`. See figure 6.
 
 ```
+# Normal MR plot
 p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se,
              iv = h$iv, iv.se = h$iv.se, 
              ivw = inverse.variance.weighted$ivw, 
@@ -333,9 +334,32 @@ p <- mr.plot(By = h$By, Bx = h$Bx, By.se = h$By.se, Bx.se = h$Bx.se,
              egger.Q = egger.Q$egger, egger.Q.i = egger.Q$egger.i, egger.Q.i.p = egger.Q$egger.i.p, 
              outcome.name = "Celiac", exposure.name = "Inflammatory Bowel Disease", show.stats = F)
 ggdraw(p)
+
+# Funnel plot IVW
+f.inverse.variance.weighted <- mr.funnel.plot(iv = h$iv, iv.se = h$iv.se,
+                                              method.estimate.before.Q = inverse.variance.weighted$ivw,
+                                              method.estimate.after.Q  = inverse.variance.weighted.Q$ivw,
+                                              method.name = "Inverse-Variance Weighted method",
+                                              linetype = "dashed", chochran.Q = h$cochran.Q,
+                                              outcome.name = "Celiac", exposure.name = "Inflammatory Bowel Disease")
+ggdraw(f.inverse.variance.weighted)
+
+# Funnel plot egger
+f.egger <- mr.funnel.plot(iv = h$iv, iv.se = h$iv.se,
+                          method.estimate.before.Q = egger$egger,
+                          method.estimate.after.Q  = egger.Q$egger,
+                          method.name = "MR-egger method",
+                          linetype = "solid", chochran.Q = h$cochran.Q,
+                          outcome.name = "Celiac", exposure.name = "Inflammatory Bowel Disease")
+ggdraw(f.egger)
+
+# Forest plot
 ```
 
-Figure 5: The MR plot, this shows that a lower risk for Inflammatory Bowel disease protects for Celiac Disease. | Figure 6: Funnel plot for the Inverse-Variance Weighted method that describe the accuracy of the methods. | Figure 7: Funnel plot for the MR-egger that describe the accuracy of the methods. 
-:-------------------------------------:|:-------------------------------------------------------:|:-----------------------------------:
-![alt-text-1](inst/img/celiac~ibd.png) |![alt-text-1](inst/img/f.inverse.variance.weighted.png)  | ![alt-text-1](inst/img/f.egger.png)
-       
+Figure 5: The MR plot, this shows that a lower risk for Inflammatory Bowel disease protects for Celiac Disease. | Figure 6: Forest plot of the MR analysis.
+:-------------------------------------:|:-------------------------------------------------------:
+![alt-text-1](inst/img/celiac~ibd.png) |![alt-text-1](inst/img/forest.png) 
+
+Figure 7: Funnel plot for the Inverse-Variance Weighted method that describe the accuracy of the method. | Figure 8: Funnel plot for the MR-egger that describe the accuracy of the method.      
+:-------------------------------------------------------:|:-----------------------------------:
+![alt-text-1](inst/img/f.inverse.variance.weighted.png)  | ![alt-text-1](inst/img/f.egger.png)
