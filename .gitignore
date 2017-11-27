@@ -2,3 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+R/mr.Pascal.R
+man/mr.Pascal.Rd
+inst/executables/PASCAL
+
