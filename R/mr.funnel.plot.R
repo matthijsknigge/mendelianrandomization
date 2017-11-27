@@ -9,7 +9,7 @@
 #' @param linetype what linetype. Default dashed.
 #' @param legend boolean. Use legend, or remove. Default is TRUE
 #' @param position position of the legend. Default bottom
-#' @param chochran.Q vector indicating if the SNPs is removed by Chochran's Q test due to pleiotropic effects. Default is NULL.
+#' @param cochran.Q vector indicating if the SNPs is removed by Chochran's Q test due to pleiotropic effects. Default is NULL.
 #' @param outcome.name string of outcome name
 #' @param exposure.name string of exposure name
 #'
@@ -19,14 +19,14 @@
 #' mr.funnel.plot()
 #'
 #' @return funnel plot
-mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.after.Q = NULL, method.name, linetype = "dashed", legend = TRUE, position = "bottom", chochran.Q = NULL,
+mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.after.Q = NULL, method.name, linetype = "dashed", legend = TRUE, position = "bottom", cochran.Q = NULL,
                            outcome.name, exposure.name){
-  require(ggplot2); require(latex2exp); require("RColorBrewer"); require(ggExtra)
+  require(ggplot2); require(latex2exp); require("RColorBrewer"); require(ggExtra); require(cowplot); require(gridExtra)
   # calculate z-score for coloring points
   iv.z <- iv / iv.se
   # check if Chochran's Q is used on data set
-  if(sum(chochran.Q) == 0){
-    chochran.Q <- NULL
+  if(sum(cochran.Q) == 0){
+    cochran.Q <- NULL
     method.estimate.after.Q <- NULL
   }
 
@@ -52,9 +52,9 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
   p <- p + geom_point(aes(colour = iv.z), alpha = 0.8, size=4)
 
   # Chochran's Q points
-  if(!is.null(chochran.Q)){
-    p <- p + geom_point(aes(colour = iv.z, shape = factor(chochran.Q)), alpha = 0.8, size=4)
-    p <- p + geom_point(data=NULL, aes(x=iv[which(chochran.Q == 0)], y=iv.se[which(chochran.Q == 0)]), colour="red", size=4.1)
+  if(!is.null(cochran.Q)){
+    p <- p + geom_point(aes(colour = iv.z, shape = factor(cochran.Q)), alpha = 0.8, size=4)
+    p <- p + geom_point(data=NULL, aes(x=iv[which(cochran.Q == 0)], y=iv.se[which(cochran.Q == 0)]), colour="red", size=4.1)
     p <- p + guides(shape = guide_legend(override.aes = list(size = 5, shape=c(21,21), colour="white", fill=c("red", brewer.pal(9, "Blues")[7]))))
     p <- p + scale_shape_manual(values=c(19, 19), name = TeX("$\\chi^2_{homogeneity}$"), labels = c("p > 0.05", "p < 0.05"))
   }
@@ -62,7 +62,7 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
   # method estimate before Chochran's Q test
   p <- p +  geom_vline(aes(xintercept=method.estimate.before.Q, linetype = method.name), color = "darkblue", alpha = .3)
   # method estimate after Chochran's Q test
-  if(!is.null(chochran.Q)){
+  if(!is.null(cochran.Q)){
     # method after Q
     p <- p +  geom_vline(aes(xintercept=method.estimate.after.Q, linetype = paste0(method.name, ".Q")), color = "darkblue")
     # calc confidence intervals after Q test
@@ -84,7 +84,7 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
   p <- p + geom_line(aes(y = se.seq, x = ul99), linetype = 'twodash', data = dfCI.before.Q, color = "grey")
 
   # shade region
-  if(is.null(chochran.Q)){
+  if(is.null(cochran.Q)){
     p <- p + geom_area(aes(x = dfCI.before.Q$ll99, y = dfCI.before.Q$se.seq), color = "grey", alpha = .1, size = 0)
     p <- p + geom_area(aes(x = dfCI.before.Q$ul99, y = dfCI.before.Q$se.seq), color = "grey", alpha = .1, size = 0)
   }
@@ -101,15 +101,15 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
   # manually change linetye or override the existing one
   p <- p + scale_linetype_manual(name = "Method", values = c(assign(method.name, linetype), assign(paste0(method.name, ".Q"), linetype)))
   # manually change legend, ugly code
-  if(!is.null(chochran.Q)){lty <- c(assign(method.name, linetype), assign(paste0(method.name, ".Q"), linetype)); co <- c("darkblue", "darkblue"); alp <- c(0.1,1)}
-  if(is.null(chochran.Q)){lty <- c(assign(method.name, linetype)); co <- c("darkblue"); alp <- c(.1)}
+  if(!is.null(cochran.Q)){lty <- c(assign(method.name, linetype), assign(paste0(method.name, ".Q"), linetype)); co <- c("darkblue", "darkblue"); alp <- c(0.1,1)}
+  if(is.null(cochran.Q)){lty <- c(assign(method.name, linetype)); co <- c("darkblue"); alp <- c(.1)}
   p <- p + guides( linetype = guide_legend(override.aes = list(linetype=lty, color=co, alpha=alp)))
 
   #  add rug
   p <- p + geom_rug(aes(color = iv.z))
   # add rug for Chochran's Q
-  if(!is.null(chochran.Q)){
-    p <- p + geom_rug(data=NULL, aes(x=iv[which(chochran.Q == 0)], y=iv.se[which(chochran.Q == 0)]), colour="red")
+  if(!is.null(cochran.Q)){
+    p <- p + geom_rug(data=NULL, aes(x=iv[which(cochran.Q == 0)], y=iv.se[which(cochran.Q == 0)]), colour="red")
   }
 
   # stolen theme for plot
@@ -124,7 +124,7 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
   }
 
   # shade part in the end, otherwise can't query max/min limits of x/y axis
-  if(!is.null(chochran.Q)){
+  if(!is.null(cochran.Q)){
     # shade blocks that fall out confidence interval for lower part
     lowest.value.x.axis <- layer_scales(p)$x$range$range[1]
     min.term.ll99 <- min(dfCI.after.Q$ll99)
@@ -137,7 +137,7 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
     max.term.ul99 <- max(dfCI.after.Q$ul99)
     p <- p + annotate("rect", xmin=max.term.ul99, xmax=highest.value.x.axis, ymin=lowest.value.y.axis*-1, ymax=highest.value.y.axis, alpha=0.3, fill="grey")
   }
-  if(is.null(chochran.Q)){
+  if(is.null(cochran.Q)){
     # shade blocks that fall out confidence interval for lower part
     lowest.value.x.axis <- layer_scales(p)$x$range$range[1]
     min.term.ll99 <- min(dfCI.before.Q$ll99)
@@ -150,6 +150,23 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
     max.term.ul99 <- max(dfCI.before.Q$ul99)
     p <- p + annotate("rect", xmin=max.term.ul99, xmax=highest.value.x.axis, ymin=lowest.value.y.axis*-1, ymax=highest.value.y.axis, alpha=0.3, fill="grey")
   }
-
+  # for some #*$%! reason the variable must be in the global scope of R to be inserted into a grid??????????
+  iv <<- iv; cochran.Q <<- cochran.Q;
+  # x-axis
+  xdens <- axis_canvas(p, axis = "x")
+  if(is.null(cochran.Q)){
+    xdens <- xdens + geom_density(data = NULL, aes(x = iv), fill = "steelblue", alpha = 1, size = 0.2)
+    xdens <- xdens + geom_vline(xintercept = method.estimate.before.Q, color = "darkblue", linetype = linetype)
+  }
+  if(!is.null(cochran.Q)){
+    xdens <- xdens + geom_density(data = NULL, aes(x = iv[which(cochran.Q == 1)]), fill = "steelblue", alpha = 1, size = 0.2)
+    xdens <- xdens + geom_density(data = NULL, aes(x = iv[which(cochran.Q == 0)]), fill = "red", alpha = .3, size = 0.2)
+    xdens <- xdens + geom_vline(xintercept = method.estimate.before.Q, color = "grey", linetype = linetype)
+    xdens <- xdens + geom_vline(xintercept = method.estimate.after.Q, color = "darkblue", linetype = linetype)
+  }
+  # insert into grid
+  p <- insert_xaxis_grob(p, xdens, grid::unit(.2, "null"), position = "top")
+  # remove from global environment
+  rm(iv, envir = .GlobalEnv); rm(cochran.Q, envir = .GlobalEnv)
   return(p)
 }
