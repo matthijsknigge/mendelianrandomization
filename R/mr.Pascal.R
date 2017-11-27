@@ -5,7 +5,7 @@
 #'
 #' @param SNPs vector of SNPs. Default is NULL.
 #' @param pval vector p values associated with the SNPs. Default is NULL.
-#' @param path.to.ref Give the path to where the gnu-zipped tped-files are stored.
+#' @param custom Give the path to where the gnu-zipped tped-files are stored.
 #'
 #' @keywords Pascal
 #' @export
@@ -14,7 +14,7 @@
 #'
 #' @return List with the following elements:
 #'
-mr.Pascal <- function(SNPs = NULL, pval = NULL, path.to.ref){
+mr.Pascal <- function(SNPs = NULL, pval = NULL){
   require(data.table)
   # output folder from pascal
   Pascal.bin <- paste0(system.file(package="mendelianRandomization", "executables", "PASCAL"), "/")
@@ -42,10 +42,10 @@ mr.Pascal <- function(SNPs = NULL, pval = NULL, path.to.ref){
   gene.scores.path <- paste0(Pascal.out, tmp, ".sum.genescores.txt")
   SNPs.errors.path <- paste0(Pascal.out, tmp, ".sum.numSnpError.txt")
   # read data
-  pathway     <<- fread(pathway.path)
-  fusion      <<- fread(fusion.path)
-  gene.scores <<- fread(gene.scores.path)
-  SNPs.errors <<- fread(SNPs.errors.path)
+  pathway     <- fread(pathway.path)
+  fusion      <- fread(fusion.path)
+  gene.scores <- fread(gene.scores.path)
+  SNPs.errors <- fread(SNPs.errors.path)
 
   # unlink tmp files
   unlink(fn); unlink(pathway.path); unlink(fusion.path); unlink(gene.scores.path); unlink(SNPs.errors.path);
