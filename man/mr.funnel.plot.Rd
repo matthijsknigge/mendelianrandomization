@@ -6,7 +6,7 @@
 \usage{
 mr.funnel.plot(iv, iv.se, method.estimate.before.Q,
   method.estimate.after.Q = NULL, method.name, linetype = "dashed",
-  legend = TRUE, position = "bottom", chochran.Q = NULL, outcome.name,
+  legend = TRUE, position = "bottom", cochran.Q = NULL, outcome.name,
   exposure.name)
 }
 \arguments{
@@ -16,6 +16,8 @@ mr.funnel.plot(iv, iv.se, method.estimate.before.Q,
 
 \item{method.estimate.before.Q}{the beta estimate of the chosen method to plot before Chochren's Q test}
 
+\item{method.estimate.after.Q}{the beta estimate of the chosen method to plot after Chochren's Q test. Default NULL.}
+
 \item{method.name}{name of the method, used for legend.}
 
 \item{linetype}{what linetype. Default dashed.}
@@ -24,13 +26,11 @@ mr.funnel.plot(iv, iv.se, method.estimate.before.Q,
 
 \item{position}{position of the legend. Default bottom}
 
-\item{chochran.Q}{vector indicating if the SNPs is removed by Chochran's Q test due to pleiotropic effects. Default is NULL.}
+\item{cochran.Q}{vector indicating if the SNPs is removed by Chochran's Q test due to pleiotropic effects. Default is NULL.}
 
 \item{outcome.name}{string of outcome name}
 
 \item{exposure.name}{string of exposure name}
-
-\item{method.estimate.before.Q}{the beta estimate of the chosen method to plot after Chochren's Q test. Default NULL.}
 }
 \value{
 funnel plot

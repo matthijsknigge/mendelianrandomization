@@ -4,7 +4,7 @@
 #' @param iv vector of causal effect estimate
 #' @param iv.se vector of standard error of causal effect estimate
 #' @param method.estimate.before.Q the beta estimate of the chosen method to plot before Chochren's Q test
-#' @param method.estimate.before.Q the beta estimate of the chosen method to plot after Chochren's Q test. Default NULL.
+#' @param method.estimate.after.Q the beta estimate of the chosen method to plot after Chochren's Q test. Default NULL.
 #' @param method.name name of the method, used for legend.
 #' @param linetype what linetype. Default dashed.
 #' @param legend boolean. Use legend, or remove. Default is TRUE
@@ -19,7 +19,8 @@
 #' mr.funnel.plot()
 #'
 #' @return funnel plot
-mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.after.Q = NULL, method.name, linetype = "dashed", legend = TRUE, position = "bottom", cochran.Q = NULL,
+mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.after.Q = NULL,
+                           method.name, linetype = "dashed", legend = TRUE, position = "bottom", cochran.Q = NULL,
                            outcome.name, exposure.name){
   require(ggplot2); require(latex2exp); require("RColorBrewer"); require(ggExtra); require(cowplot); require(gridExtra)
   # calculate z-score for coloring points
@@ -155,12 +156,16 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
   # x-axis
   xdens <- axis_canvas(p, axis = "x")
   if(is.null(cochran.Q)){
+    # draw density
     xdens <- xdens + geom_density(data = NULL, aes(x = iv), fill = "steelblue", alpha = 1, size = 0.2)
+    # method base line
     xdens <- xdens + geom_vline(xintercept = method.estimate.before.Q, color = "darkblue", linetype = linetype)
   }
   if(!is.null(cochran.Q)){
+    # draw density
     xdens <- xdens + geom_density(data = NULL, aes(x = iv[which(cochran.Q == 1)]), fill = "steelblue", alpha = 1, size = 0.2)
     xdens <- xdens + geom_density(data = NULL, aes(x = iv[which(cochran.Q == 0)]), fill = "red", alpha = .3, size = 0.2)
+    # draw method baseline
     xdens <- xdens + geom_vline(xintercept = method.estimate.before.Q, color = "grey", linetype = linetype)
     xdens <- xdens + geom_vline(xintercept = method.estimate.after.Q, color = "darkblue", linetype = linetype)
   }
