@@ -5,6 +5,7 @@
 #'
 #' @param SNPs vector of SNPs. Default is NULL.
 #' @param pval vector p values associated with the SNPs. Default is NULL.
+#' @param path.to.ref Give the path to where the gnu-zipped tped-files are stored.
 #'
 #' @keywords Pascal
 #' @export
@@ -13,7 +14,7 @@
 #'
 #' @return List with the following elements:
 #'
-mr.Pascal <- function(SNPs = NULL, pval = NULL){
+mr.Pascal <- function(SNPs = NULL, pval = NULL, path.to.ref){
   require(data.table)
   # output folder from pascal
   Pascal.bin <- paste0(system.file(package="mendelianRandomization", "executables", "PASCAL"), "/")
