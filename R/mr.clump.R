@@ -23,13 +23,13 @@ mr.clump <- function(data, refdat, clump_kb = 1000, clump_r2 = .1, clump_p1 = 5*
     return(data)
   }
   # check if tempt exists
-  if(!dir.exists(paste0(system.file(package="mendelianRandomization", "executables"), "/temp_clump"))){
-    dir.create(file.path(system.file(package="mendelianRandomization", "executables"), "temp_clump"))
+  if(!dir.exists(paste0(system.file(package="mendelianRandomization", "executables"), "/PLINK/temp_clump"))){
+    dir.create(file.path(system.file(package="mendelianRandomization", "executables"), "/PLINK/temp_clump"))
   }
   # plink_bin
-  plink_bin <- paste0(system.file(package="mendelianRandomization", "executables"), "/")
+  plink_bin <- paste0(system.file(package="mendelianRandomization", "executables"), "/PLINK/")
   # temp folder for clumping
-  tempdir <-   paste0(system.file(package="mendelianRandomization", "executables"), "/temp_clump")
+  tempdir <-   paste0(system.file(package="mendelianRandomization", "executables"), "/PLINK/temp_clump")
   # Make textfile
   fn <- tempfile(tmpdir = tempdir)
   write.table(data.frame(SNP=data$SNP, P=data$pval), file=fn, row.names=F, col.names=T, quote=F)
