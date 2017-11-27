@@ -4,12 +4,14 @@
 \alias{mr.Pascal}
 \title{Pascal (Pathway scoring algorithm)}
 \usage{
-mr.Pascal(SNPs = NULL, pval = NULL)
+mr.Pascal(SNPs = NULL, pval, Pascal.root)
 }
 \arguments{
 \item{SNPs}{vector of SNPs. Default is NULL.}
 
 \item{pval}{vector p values associated with the SNPs. Default is NULL.}
+
+\item{custom}{path to the root folder of Pascal}
 }
 \value{
 List with the following elements:

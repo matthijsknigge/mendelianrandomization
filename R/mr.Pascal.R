@@ -5,7 +5,7 @@
 #'
 #' @param SNPs vector of SNPs. Default is NULL.
 #' @param pval vector p values associated with the SNPs. Default is NULL.
-#' @param custom Give the path to where the gnu-zipped tped-files are stored.
+#' @param custom path to the root folder of Pascal
 #'
 #' @keywords Pascal
 #' @export
@@ -14,24 +14,24 @@
 #'
 #' @return List with the following elements:
 #'
-mr.Pascal <- function(SNPs = NULL, pval = NULL){
+mr.Pascal <- function(SNPs, pval, Pascal.root){
   require(data.table)
   # output folder from pascal
-  Pascal.bin <- paste0(system.file(package="mendelianRandomization", "executables", "PASCAL"), "/")
+  Pascal.bin <- Pascal.root
   # Pascal output
-  Pascal.out <- paste0(system.file(package="mendelianRandomization", "executables", "PASCAL"), "/output/")
+  Pascal.out <- paste0(Pascal.root, "/output/")
   # tempdir for Pascal
-  if(!dir.exists(paste0(system.file(package="mendelianRandomization", "executables"), "/PASCAL/temp"))){
+  if(!dir.exists(paste0(Pascal.root, "/temp"))){
     # check if tempdir exists, if not create
-    dir.create(file.path(system.file(package="mendelianRandomization", "executables"), "/PASCAL/temp"))
+    dir.create(file.path(paste0(Pascal.root, "/temp")))
   }
   # Pascal tempdir
-  tempdir <- file.path(system.file(package="mendelianRandomization", "executables"), "PASCAL/temp")
+  tempdir <- paste0(Pascal.root, "/temp")
   # Make textfile
   fn <- tempfile(tmpdir = tempdir)
   write.table(data.frame(SNP=SNPs, snpPvalCol=pval), file=fn, row.names=FALSE, col.names=TRUE, quote=FALSE, sep = "\t")
   # function for executing Pascal
-  fun2 <- paste0(Pascal.bin, "./Pascal", " --pval ", fn, " --genescoring=sum", " --runpathway=on")
+  fun2 <- paste0(Pascal.bin, "/./Pascal", " --pval ", fn, " --genescoring=sum", " --runpathway=on")
   # perform function
   system(fun2)
   # get tmp file name
@@ -42,11 +42,11 @@ mr.Pascal <- function(SNPs = NULL, pval = NULL){
   gene.scores.path <- paste0(Pascal.out, tmp, ".sum.genescores.txt")
   SNPs.errors.path <- paste0(Pascal.out, tmp, ".sum.numSnpError.txt")
   # read data
-  pathway     <- fread(pathway.path)
-  fusion      <- fread(fusion.path)
-  gene.scores <- fread(gene.scores.path)
-  SNPs.errors <- fread(SNPs.errors.path)
-
+  pathway <- fread(pathway.path)
+  # get significant path ways
+  pathways <- pathway[which(pathway$chi2Pvalue < .05), ]$Name
   # unlink tmp files
   unlink(fn); unlink(pathway.path); unlink(fusion.path); unlink(gene.scores.path); unlink(SNPs.errors.path);
+  # return significant pathways
+  return(list(pathways = pathways))
 }
