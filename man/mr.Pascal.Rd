@@ -4,20 +4,24 @@
 \alias{mr.Pascal}
 \title{Pascal (Pathway scoring algorithm)}
 \usage{
-mr.Pascal(SNPs = NULL, pval, Pascal.root)
+mr.Pascal(SNPs, pval, Pascal.root, cochran.Q = NULL)
 }
 \arguments{
-\item{SNPs}{vector of SNPs. Default is NULL.}
+\item{SNPs}{vector of SNPs.}
 
-\item{pval}{vector p values associated with the SNPs. Default is NULL.}
+\item{pval}{vector p values associated with the SNPs.}
 
-\item{custom}{path to the root folder of Pascal}
+\item{Pascal.root}{path to the root folder of Pascal}
+
+\item{cochran.Q}{if in the data set a subset of SNPs is removed, this vector can be used to look for pathways that distinguish both subsets of SNPs. Default is NULL}
 }
 \value{
 List with the following elements:
+        pathways: significant pathways found by Pascal on SNPs that are not removed by Cochran's Q test
+        pathways.Q: significant pathways found by Pascal on SNPs that are removed by Cochran's Q test
 }
 \description{
-Pascal is a tool that allows gene and pathway-level analysis of GWAS association results without the need to access genotypic data. This is an executable that can not be exported. This must be downloaded and installed by the user. Pascal is available for download here: https://www2.unil.ch/cbg/index.php?title=Pascal. Individual SNPs are mapped to genes and their association p-values are combined into gene scores; second, genes are grouped into pathways and their gene scores are combined into pathway scores.
+Pascal is a tool that allows gene and pathway-level analysis of GWAS association results without the need to access genotypic data. This is an executable that can not be exported. This must be downloaded and installed by the user. Pascal is available for download here: https://www2.unil.ch/cbg/index.php?title=Pascal. Individual SNPs are mapped to genes and their association p-values are combined into gene scores, and genes are grouped into pathways and their gene scores are combined into pathway scores.
 }
 \examples{
 mr.Pascal()
