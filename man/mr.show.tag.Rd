@@ -2,27 +2,31 @@
 % Please edit documentation in R/mr.show.tag.R
 \name{mr.show.tag}
 \alias{mr.show.tag}
-\title{clumping show-tag for finding proxy SNPs}
+\title{PLINK show-tag for finding proxy SNPs}
 \usage{
-mr.show.tag(SNP, refdat, tag_r2 = 0.1, tag_kb = 1000)
+mr.show.tag(data, refdat, originaldat, popdat, tag_r2 = 0.8, tag_kb = 1000)
 }
 \arguments{
-\item{SNP}{vector containing SNPs to be proxied}
+\item{data}{this must be the data structure given from mr.harmonize}
 
 \item{refdat}{path to reference data for tagging (EUR_1000G_phase3_vcf)}
+
+\item{originaldat}{path to the original data, this wil act as a reference for choosing which proxy SNPs to use. Should contain SNP, beta, se}
+
+\item{popdat}{path to the population data.}
 
 \item{tag_r2}{clumping r2 cutoff, default = .1}
 
 \item{tag_kb}{window size, default = 1000}
 }
 \value{
-data.frame with removed snps
+List with the following: vector of SNPs that was given. vector replacement with corresponding replacement or indication that there is no replacement
 }
 \description{
-clumping show-tag for finding proxy SNPs
+PLINK show-tag for finding proxy SNPs
 }
 \examples{
-mr.show.tag(SNP = SNP, refdat = '/path/to/refdata/EUR_1000G_phase3_vcf')
+mr.show.tag(SNP = SNP, refdat = '/path/to/refdata/EUR_1000G_phase3_vcf', originaldat = 'path/to/original/gwas.txt', popdat = 'path/to/population/data.bim')
 
 }
 \author{
