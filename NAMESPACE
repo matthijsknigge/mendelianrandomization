@@ -2,6 +2,7 @@
 
 export(mr.Pascal)
 export(mr.adjust.p)
+export(mr.allelic.scoring)
 export(mr.calculate.B)
 export(mr.calculate.se)
 export(mr.calculate.se.2)
