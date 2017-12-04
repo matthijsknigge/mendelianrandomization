@@ -1,0 +1,18 @@
+PLINK v1.90b4.6 64-bit (15 Aug 2017)
+Options in effect:
+  --bfile /home/matthijsknigge/1000G/EUR_1000G_phase3_vcf
+  --list-all
+  --out /home/matthijsknigge/mendelianRandomization/inst/executables/PLINK/temp_clump/file134a78e4cf99
+  --show-tags /home/matthijsknigge/mendelianRandomization/inst/executables/PLINK/temp_clump/file134a78e4cf99
+  --tag-kb 1000
+  --tag-r2 0.8
+
+Hostname: knigge
+Working directory: /home/matthijsknigge/mendelianRandomization
+Start time: Thu Nov 30 09:33:05 2017
+
+Random number seed: 1512030785
+15901 MB RAM detected; reserving 7950 MB for main workspace.
+Error: Failed to open /home/matthijsknigge/1000G/EUR_1000G_phase3_vcf.bed.
+
+End time: Thu Nov 30 09:33:05 2017
