@@ -22,8 +22,8 @@
 #'         egger.i.p: p-value of intercept
 mr.egger.method <- function(By, Bx, By.se, Bx.se, subset = NULL){
   # if sum subset == 0, do not apply
-  if(sum(subset) == 0){
-    subset <- NULL
+  if(!is.null(subset) & sum(subset) == 0){
+    return(list(egger = NA, egger.se = NA, egger.p = NA, egger.i = NA, egger.i.se = NA, egger.i.p = NA))
   }
   # if subset is used, filter data
   if(!is.null(subset)){
@@ -31,10 +31,6 @@ mr.egger.method <- function(By, Bx, By.se, Bx.se, subset = NULL){
     Bx <- Bx[which(subset == 1)]
     By.se <- By.se[which(subset == 1)]
     Bx.se <- Bx.se[which(subset == 1)]
-  }
-  # test if vector is empty
-  if(length(By) == 0){
-    return(list(egger = NA, egger.se = NA, egger.p = NA, egger.i = NA, egger.i.se = NA, egger.i.p = NA))
   }
   # if not enough data
   if(length(By) < 3){
