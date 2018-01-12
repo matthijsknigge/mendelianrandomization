@@ -15,6 +15,6 @@
 mr.calculate.se <- function(B, pval){
   # se
   se <-sqrt(B^2/(qchisq(pval, 1, lower.tail = FALSE)))
-
+  # return se
   return(list(se = se))
 }
