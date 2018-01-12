@@ -43,7 +43,7 @@ mr.egger.method <- function(By, Bx, By.se, Bx.se, subset = NULL){
   # egger
   egger <- summary(lm(By~Bx, weights=By.se^-2))$coef[2,1]
   # egger.se
-  egger.se <- summary(lm(By ~ Bx, weights = By.se^-2))$coef[2,2] / summary(lm(By ~ Bx, weights = By.se^-2))$sigma
+  egger.se <- summary(lm(By ~ Bx, weights = By.se^-2))$coef[2,2] / summary(lm(By ~ Bx, weights = By.se^-2))$sigma # standard deviations of the residuals
   # egger.p
   egger.p <- 2 * pt(abs(egger/egger.se), df = length(Bx) - 2, lower.tail = F)
 
