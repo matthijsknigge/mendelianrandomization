@@ -68,6 +68,7 @@ mr.Pascal <- function(SNPs, pval, Pascal.root, cochran.Q = NULL){
 mr.perform.Pascal <- function(Pascal.bin, Pascal.out, tempdir, SNPs, pval){
   # Make textfile
   fn <- tempfile(tmpdir = tempdir)
+  # output table
   write.table(data.frame(SNP=SNPs, snpPvalCol=pval), file=fn, row.names=FALSE, col.names=TRUE, quote=FALSE, sep = "\t")
   # function for executing Pascal
   fun2 <- paste0(Pascal.bin, "/./Pascal", " --pval ", fn, " --genescoring=sum", " --runpathway=on")
