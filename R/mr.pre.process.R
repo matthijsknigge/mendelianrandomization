@@ -8,17 +8,18 @@
 #' @param effect_allele vector containing the effect_alleles
 #' @param other_allele vector containing the effect_alleles
 #' @param SNP vector containing rs_ids
+#' @param significance.level numeric value indicating threshold for selecting SNPs. Default 5*10^-8
 #' @keywords pre process
 #' @export
 #' @examples
 #' mr.pre.process()
 #'
 #' @return cleaned data
-mr.pre.process <- function(B, B.se, pval, effect_allele, other_allele, SNP){
+mr.pre.process <- function(B, B.se, pval, effect_allele, other_allele, SNP, significance.level = 5*10^-8){
   # bind to frame
   data <- data.frame(SNP = SNP, beta = B, se = B.se, effect_allele = effect_allele, other_allele = other_allele, pval = pval, stringsAsFactors=FALSE)
   # filter on p-value
-  data <- data[which(data$pval < 5*10^-8),]
+  data <- data[which(data$pval < significance.level),]
   # delete exposures without effectsize or OR
   if(length(which(is.na(data$beta)) > 0)){
     data <- data[-which(is.na(data$beta)), ]
