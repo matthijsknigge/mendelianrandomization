@@ -158,7 +158,7 @@ mr.plot <- function(By, Bx, By.se, Bx.se,
   # x-axis
   xdens <- axis_canvas(p, axis = "x")
   if(is.null(chochran.Q)){
-   xdens <- xdens + geom_histogram(data = NULL, aes(x = Bx), fill = "steelblue", alpha = 1, size = 0.2)
+   xdens <- xdens + geom_density(data = NULL, aes(x = Bx), fill = "steelblue", alpha = 1, size = 0.2)
   }
   if(!is.null(chochran.Q)){
     xdens <- xdens + geom_density(data = NULL, aes(x = Bx[which(chochran.Q == 1)]), fill = "steelblue", alpha = 1, size = 0.2)
