@@ -71,9 +71,9 @@ mr.perform.Pascal <- function(Pascal.bin, Pascal.out, tempdir, SNPs, pval){
   # output table
   write.table(data.frame(SNP=SNPs, snpPvalCol=pval), file=fn, row.names=FALSE, col.names=TRUE, quote=FALSE, sep = "\t")
   # function for executing Pascal
-  fun2 <- paste0(Pascal.bin, "bash ./Pascal", " --pval ", fn, " --genescoring=sum", " --runpathway=on")
+  fun2 <- paste0(Pascal.bin, "./Pascal", " --pval ", fn, " --genescoring=sum", " --runpathway=on")
   # perform function
-  system(fun2, ignore.stdout = T, ignore.stderr = T)
+  print("Performing pathway analysis......"); system(fun2, ignore.stdout = T, ignore.stderr = T); print("done")
   # get tmp file name
   tmp <- unlist(strsplit(x = fn, split = "/")); tmp <- tmp[length(tmp)]
   # paths to output data from Pascal
