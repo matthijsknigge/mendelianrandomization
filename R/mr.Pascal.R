@@ -73,6 +73,7 @@ mr.perform.Pascal <- function(Pascal.bin, Pascal.out, tempdir, SNPs, pval){
   # function for executing Pascal
   fun2 <- paste0(Pascal.bin, "./Pascal", " --pval ", fn, " --genescoring=sum", " --runpathway=on")
   # perform function
+  print(fun2)
   print("Performing pathway analysis......"); system(fun2, ignore.stdout = T, ignore.stderr = T); print("done")
   # get tmp file name
   tmp <- unlist(strsplit(x = fn, split = "/")); tmp <- tmp[length(tmp)]
