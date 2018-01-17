@@ -1,4 +1,4 @@
-#' Perform clumping
+ #' Perform clumping
 #' @author Matthijs Knigge
 #'
 #'
