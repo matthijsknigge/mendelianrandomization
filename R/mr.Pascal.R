@@ -7,6 +7,10 @@
 #' @param pval vector p values associated with the SNPs.
 #' @param Pascal.root path to the root folder of Pascal
 #' @param cochran.Q if in the data set a subset of SNPs is removed, this vector can be used to look for pathways that distinguish both subsets of SNPs. Default is NULL
+#' @param p.threshold threshold for significant pathways. Default = .05
+#' @param supress.output supress the commandline output from PASCAL. Default is FALSE
+#' @param up Gives the number of base-pairs upstream of the transcription start site that are still counted as belonging to the gene region. The default is 250000
+#' @param up Gives the number of base-pairs downstream of the transcription start site that are still counted as belonging to the gene region. The default is 250000
 #'
 #' @keywords Pascal
 #' @export
@@ -17,7 +21,7 @@
 #'         pathways: significant pathways found by Pascal on SNPs that are not removed by Cochran's Q test
 #'         pathways.Q: significant pathways found by Pascal on SNPs that are removed by Cochran's Q test
 #'
-mr.Pascal <- function(SNPs, pval, Pascal.root, cochran.Q = NULL){
+mr.Pascal <- function(SNPs, pval, Pascal.root, cochran.Q = NULL, p.threshold = .05, supress.output = FALSE, up = 250000, down = 250000){
   require(data.table)
   # check cochran's Q
   if(sum(cochran.Q) == 0){
@@ -50,9 +54,9 @@ mr.Pascal <- function(SNPs, pval, Pascal.root, cochran.Q = NULL){
   # get pathways for SNPs if cochran's Q test was applied
   if(!is.null(cochran.Q)){
     # call Pascal subset of SNPs that was not removed by Cochran's Q test
-    pathways <- mr.perform.Pascal(Pascal.bin = Pascal.bin, Pascal.out = Pascal.out, tempdir = tempdir, SNPs = SNPs[which(cochran.Q == 1)], pval = pval[which(cochran.Q == 1)])$pathways
+    pathways <- mr.perform.Pascal(Pascal.bin = Pascal.bin, Pascal.out = Pascal.out, tempdir = tempdir, SNPs = SNPs[which(cochran.Q == 1)], pval = pval[which(cochran.Q == 1)], p.threshold = p.threshold, supress.output = supress.output, up = up, down = down)$pathways
     # call Pascal subset of SNPs that was not removed by Cochran's Q test
-    pathways.Q <- mr.perform.Pascal(Pascal.bin = Pascal.bin, Pascal.out = Pascal.out, tempdir = tempdir, SNPs = SNPs[which(cochran.Q == 0)], pval = pval[which(cochran.Q == 0)])$pathways
+    pathways.Q <- mr.perform.Pascal(Pascal.bin = Pascal.bin, Pascal.out = Pascal.out, tempdir = tempdir, SNPs = SNPs[which(cochran.Q == 0)], pval = pval[which(cochran.Q == 0)], p.threshold = p.threshold, supress.output = supress.output, up = up, down = down)$pathways
     # force equal lengths of vectors
     paths <- list(pathways = pathways, pathways.Q = pathways.Q)
     # get max length
@@ -65,16 +69,23 @@ mr.Pascal <- function(SNPs, pval, Pascal.root, cochran.Q = NULL){
 }
 
 
-mr.perform.Pascal <- function(Pascal.bin, Pascal.out, tempdir, SNPs, pval){
+mr.perform.Pascal <- function(Pascal.bin, Pascal.out, tempdir, SNPs, pval, p.threshold, supress.output = supress.output, up, down){
   # Make textfile
   fn <- tempfile(tmpdir = tempdir)
   # output table
-  write.table(data.frame(SNP=SNPs, snpPvalCol=pval), file=fn, row.names=FALSE, col.names=TRUE, quote=FALSE, sep = "\t")
+  write.table(data.frame(SNP=SNPs, snpPvalCol=pval), file=fn, row.names=FALSE, col.names=FALSE, quote=FALSE, sep = "\t")
   # function for executing Pascal
-  fun2 <- paste0(Pascal.bin, "/./Pascal", " --pval ", fn, " --genescoring=sum", " --runpathway=on")
-  # perform function
+  fun2 <- paste0(Pascal.bin, "/./Pascal", " --pval ", fn, " --genescoring=sum", " --runpathway=on ", "--up=", up, " --down=", down)
+  # feedback
   print(fun2)
-  print("Performing pathway analysis......"); system(fun2, ignore.stdout = T, ignore.stderr = T); print("done")
+  print("Performing pathway analysis......");
+  # perform PASCAL
+  if (supress.output == TRUE){
+    system(fun2, ignore.stdout = T, ignore.stderr = T); print("done")
+  }
+  if (supress.output == FALSE){
+    system(fun2); print("done")
+  }
   # get tmp file name
   tmp <- unlist(strsplit(x = fn, split = "/")); tmp <- tmp[length(tmp)]
   # paths to output data from Pascal
@@ -85,7 +96,7 @@ mr.perform.Pascal <- function(Pascal.bin, Pascal.out, tempdir, SNPs, pval){
   # read data
   pathway <- fread(pathway.path)
   # get significant path ways
-  pathways <- pathway[which(pathway$chi2Pvalue < .05), ]$Name
+  pathways <- pathway[which(pathway$chi2Pvalue < p.threshold), ]$Name
   # unlink tmp files
   unlink(fn); unlink(pathway.path); unlink(fusion.path); unlink(gene.scores.path); unlink(SNPs.errors.path);
   # return significant pathways
