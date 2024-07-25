@@ -55,9 +55,9 @@ mr.funnel.plot <- function(iv, iv.se, method.estimate.before.Q, method.estimate.
   # Chochran's Q points
   if(!is.null(cochran.Q)){
     p <- p + geom_point(aes(colour = iv.z, shape = factor(cochran.Q)), alpha = 0.8, size=4)
-    p <- p + geom_point(data=NULL, aes(x=iv[which(cochran.Q == 0)], y=iv.se[which(cochran.Q == 0)]), colour="red", size=4.1)
-    p <- p + guides(shape = guide_legend(override.aes = list(size = 5, shape=c(21,21), colour="white", fill=c("red", brewer.pal(9, "Blues")[7]))))
-    p <- p + scale_shape_manual(values=c(19, 19), name = TeX("$\\chi^2_{homogeneity}$"), labels = c("p > 0.05", "p < 0.05"))
+    p <- p + geom_point(data=NULL, aes(x=iv[which(cochran.Q == 0)], y=iv.se[which(cochran.Q == 0)]), colour="blue", size=4.1)
+    p <- p + guides(shape = guide_legend(override.aes = list(size = 5, shape=c(21,21), colour="white", fill=c("blue", brewer.pal(9, "Blues")[7]))))
+    p <- p + scale_shape_manual(values=c(19, 19), name = TeX("$\\chi^2_{homogeneity}$"), labels = c("p < 0.05", "p > 0.05"))
   }
 
   # method estimate before Chochran's Q test
